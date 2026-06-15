@@ -912,6 +912,8 @@
 		429C72202B28D0EC00BCD558 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 429C721F2B28D0EC00BCD558 /* Haptics.swift */; };
 		429C82892DCCDB0F007B03AF /* HAProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E4C9922DCC9A6600DF2813 /* HAProgressView.swift */; };
 		42A0B9362EBB82EB00E074BF /* StatusBarButtonsConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A0B9352EBB82EB00E074BF /* StatusBarButtonsConfigurator.swift */; };
+		42A11F212FBD4A4100AA0001 /* HAIntentLightController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A11F202FBD4A4100AA0001 /* HAIntentLightController.swift */; };
+		42A11F222FBD4A4100AA0001 /* HAIntentLightController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A11F202FBD4A4100AA0001 /* HAIntentLightController.swift */; };
 		42A1860A2E1D310D004B729A /* HATextField.test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A186092E1D310D004B729A /* HATextField.test.swift */; };
 		42A2AB802C80751E00C5608D /* ControlAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A2AB7F2C80751E00C5608D /* ControlAssist.swift */; };
 		42A32F382EEA393700B323F1 /* CarPlayLockConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A32F372EEA393700B323F1 /* CarPlayLockConfirmation.swift */; };
@@ -1015,6 +1017,8 @@
 		42BC58202FAA501E0080EE09 /* CarPlayAssistDebugSettings.test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BC581F2FAA501E0080EE09 /* CarPlayAssistDebugSettings.test.swift */; };
 		42BF7F302DF867E600875A0F /* HAAppEntityAppIntentEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BF7F2F2DF867E600875A0F /* HAAppEntityAppIntentEntity.swift */; };
 		42BF7F312DF867E600875A0F /* HAAppEntityAppIntentEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BF7F2F2DF867E600875A0F /* HAAppEntityAppIntentEntity.swift */; };
+		42BF7F322DF867E600875A0F /* HAIndexedLightEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BF7F332DF867E600875A0F /* HAIndexedLightEntity.swift */; };
+		42BF7F342DF867E600875A0F /* HAIndexedLightEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BF7F332DF867E600875A0F /* HAIndexedLightEntity.swift */; };
 		42BF8DB12EC4E16900DCB7E7 /* AssistSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BF8DB02EC4E16900DCB7E7 /* AssistSceneDelegate.swift */; };
 		42BF8DB42EC4E73700DCB7E7 /* ConnectionSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BF8DB22EC4E73700DCB7E7 /* ConnectionSettingsView.swift */; };
 		42BF8DB52EC4E73700DCB7E7 /* ConnectionSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42BF8DB32EC4E73700DCB7E7 /* ConnectionSettingsViewModel.swift */; };
@@ -2642,6 +2646,7 @@
 		429C33C12F17A7010033EF5E /* HAUsagePredictionCommonControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HAUsagePredictionCommonControl.swift; sourceTree = "<group>"; };
 		429C721F2B28D0EC00BCD558 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		42A0B9352EBB82EB00E074BF /* StatusBarButtonsConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarButtonsConfigurator.swift; sourceTree = "<group>"; };
+		42A11F202FBD4A4100AA0001 /* HAIntentLightController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HAIntentLightController.swift; sourceTree = "<group>"; };
 		42A186092E1D310D004B729A /* HATextField.test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HATextField.test.swift; sourceTree = "<group>"; };
 		42A2AB7F2C80751E00C5608D /* ControlAssist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlAssist.swift; sourceTree = "<group>"; };
 		42A32F372EEA393700B323F1 /* CarPlayLockConfirmation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayLockConfirmation.swift; sourceTree = "<group>"; };
@@ -2893,6 +2898,7 @@
 		42BC581F2FAA501E0080EE09 /* CarPlayAssistDebugSettings.test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayAssistDebugSettings.test.swift; sourceTree = "<group>"; };
 		42BE698E2C46D37800745ECA /* UIScreen+PerfectCornerRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScreen+PerfectCornerRadius.swift"; sourceTree = "<group>"; };
 		42BF7F2F2DF867E600875A0F /* HAAppEntityAppIntentEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HAAppEntityAppIntentEntity.swift; sourceTree = "<group>"; };
+		42BF7F332DF867E600875A0F /* HAIndexedLightEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HAIndexedLightEntity.swift; sourceTree = "<group>"; };
 		42BF8DAF2EC4D69600DCB7E7 /* copilot-instructions.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "copilot-instructions.md"; sourceTree = "<group>"; };
 		42BF8DB02EC4E16900DCB7E7 /* AssistSceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistSceneDelegate.swift; sourceTree = "<group>"; };
 		42BF8DB22EC4E73700DCB7E7 /* ConnectionSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionSettingsView.swift; sourceTree = "<group>"; };
@@ -3951,6 +3957,7 @@
 				95A32294D4A340198B769AAB /* CommonlyUsedEntities */,
 				42FF5E8F2E22D7DA00BDF5EF /* TodoList */,
 				42BF7F2F2DF867E600875A0F /* HAAppEntityAppIntentEntity.swift */,
+				42BF7F332DF867E600875A0F /* HAIndexedLightEntity.swift */,
 				422368892D40F980005911E4 /* Lockscreen */,
 				422368882D40F965005911E4 /* Controls */,
 				422368872D40F959005911E4 /* Custom */,
@@ -4691,6 +4698,7 @@
 			children = (
 				420461682C8F29440062E89F /* ControlLight.swift */,
 				4276471F2C8F36950027B21F /* ControlLightsValueProvider.swift */,
+				42A11F202FBD4A4100AA0001 /* HAIntentLightController.swift */,
 				4276471D2C8F2F100027B21F /* IntentLightEntity.swift */,
 				427647212C8F36DB0027B21F /* LightIntent.swift */,
 			);
@@ -8838,7 +8846,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n${SRCROOT}/Tools/BuildMaterialDesignIconsFont.sh\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${SRCROOT}/Tools/BuildMaterialDesignIconsFont.sh\"\n";
 		};
 		5A903D9D6E968889ECB0DA46 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -9121,6 +9129,7 @@
 				420E2AE32C4746BB004921D8 /* WidgetBasicViewModel.swift in Sources */,
 				42A935A22C7FEBA100FCF504 /* ControlScript.swift in Sources */,
 				427647222C8F36DB0027B21F /* LightIntent.swift in Sources */,
+				42A11F212FBD4A4100AA0001 /* HAIntentLightController.swift in Sources */,
 				42F158482CA15FA7009C7201 /* SwitchIntent.swift in Sources */,
 				42C1012A2CD3DB8A0012BA78 /* CoverIntent.swift in Sources */,
 				426CBB6C2C9C550D003CA3AC /* IntentSwitchEntity.swift in Sources */,
@@ -9131,6 +9140,7 @@
 				426CBB6A2C9C543F003CA3AC /* ControlSwitchValueProvider.swift in Sources */,
 				421F2BA12EF847AA00F21FE5 /* AutomationAppIntent.swift in Sources */,
 				42BF7F302DF867E600875A0F /* HAAppEntityAppIntentEntity.swift in Sources */,
+				42BF7F322DF867E600875A0F /* HAIndexedLightEntity.swift in Sources */,
 				420E2AE52C4746CD004921D8 /* WidgetBasicSizeStyle.swift in Sources */,
 				42B74A632D36B08600C37304 /* WidgetBasicView.swift in Sources */,
 				422F88162D428E8300706A0A /* CustomWidgetActivateAppIntent.swift in Sources */,
@@ -9350,6 +9360,7 @@
 				42B7BFEF2E97CDE40056BADC /* HomeNetworkInputView.swift in Sources */,
 				0907D6244565287ED4E46A3C /* WhatsNewCatalog.swift in Sources */,
 				42BF7F312DF867E600875A0F /* HAAppEntityAppIntentEntity.swift in Sources */,
+				42BF7F342DF867E600875A0F /* HAIndexedLightEntity.swift in Sources */,
 				429481E92DA93F4300A8B468 /* WebViewJavascriptCommands.swift in Sources */,
 				11F3D74C2495377B00C05BBA /* SensorListView.swift in Sources */,
 				42FCCFFA2B9B1C310057783F /* ThreadCredentialsSharingToKeychainViewModel.swift in Sources */,
@@ -9398,6 +9409,7 @@
 				427FEE092D9C04050047C00C /* OnboardingServersListViewModel.swift in Sources */,
 				420FE84E2B556CE500878E06 /* CarPlayEntitiesListViewModel.swift in Sources */,
 				4263A6662EFB291D0089C338 /* LightIntent.swift in Sources */,
+				42A11F222FBD4A4100AA0001 /* HAIntentLightController.swift in Sources */,
 				11195F71267EFE2C003DF674 /* NotificationManagerLocalPushInterfaceUnsupported.swift in Sources */,
 				428CB3372CF7FC0800F1320E /* WidgetFamilySizes.swift in Sources */,
 				424627332C98D8E900EF7B43 /* WidgetBasicViewTintedWrapper.swift in Sources */,

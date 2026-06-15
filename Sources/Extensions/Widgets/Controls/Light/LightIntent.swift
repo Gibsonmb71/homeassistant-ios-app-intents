@@ -1,6 +1,4 @@
 import AppIntents
-import Foundation
-import Shared
 
 @available(iOS 18, *)
 struct LightIntent: SetValueIntent {
@@ -16,28 +14,12 @@ struct LightIntent: SetValueIntent {
     var toggle: Bool
 
     func perform() async throws -> some IntentResult {
-        await Current.connectivity.syncNetworkInformation()
-        guard let server = Current.servers.all.first(where: { $0.identifier.rawValue == light.serverId }),
-              let connection = Current.api(for: server)?.connection else {
-            return .result()
-        }
-
-        var service = Service.toggle.rawValue
-        if !toggle {
-            service = value ? Service.turnOn.rawValue : Service.turnOff.rawValue
-        }
-
-        let _ = await withCheckedContinuation { continuation in
-            connection.send(.callService(
-                domain: .init(stringLiteral: Domain.light.rawValue),
-                service: .init(stringLiteral: service),
-                data: [
-                    "entity_id": light.entityId,
-                ]
-            )).promise.pipe { _ in
-                continuation.resume()
-            }
-        }
+        await HAIntentLightController().control(
+            serverId: light.serverId,
+            entityId: light.entityId,
+            value: value,
+            toggle: toggle
+        )
         return .result()
     }
 }
