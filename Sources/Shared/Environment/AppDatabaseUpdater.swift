@@ -338,10 +338,13 @@ final class AppDatabaseUpdater: AppDatabaseUpdaterProtocol {
         // resolves each entity's display name from the just-saved registry and bakes it into
         // `HAAppEntity.name`. HAKit completions fire on the main queue; the Set construction and DB
         // work happen here, after the await, off the main thread (see `AppEntitiesModel.handle`).
+        let appEntityUpdateResult: AppEntitiesModelUpdateResult
         if let fetchedEntities {
             let timer = ProfilingTimer("Step 3 (Entities persist)")
-            await Current.appEntitiesModel().updateModel(Set(fetchedEntities), server: server)
+            appEntityUpdateResult = await Current.appEntitiesModel().updateModel(Set(fetchedEntities), server: server)
             timer.end()
+        } else {
+            appEntityUpdateResult = .noChanges
         }
         if isUpdateCancelled() { return }
 
@@ -360,6 +363,16 @@ final class AppDatabaseUpdater: AppDatabaseUpdaterProtocol {
             let timer = ProfilingTimer("Step 5 (Areas)")
             await updateAreasDatabase(server: server)
             timer.end()
+        }
+        if appEntityUpdateResult.didUpdateLightEntities {
+            NotificationCenter.default.post(
+                name: .appEntityCacheDidUpdate,
+                object: nil,
+                userInfo: [
+                    Notification.AppEntityCacheUpdateUserInfo.serverId: server.identifier.rawValue,
+                    Notification.AppEntityCacheUpdateUserInfo.serverName: server.info.name,
+                ]
+            )
         }
 
         totalTimer.end()

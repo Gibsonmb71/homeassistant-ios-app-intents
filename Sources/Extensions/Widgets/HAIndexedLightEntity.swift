@@ -270,6 +270,33 @@ struct HAIndexedLightEntitySpotlightIndexer {
     }
 }
 
+@available(iOS 18.0, *)
+enum HAIndexedLightEntityIndexingCoordinator {
+    static func reindexAfterAppEntityCacheUpdate(serverId: String, serverName: String?) async {
+        do {
+            let summary = try await HAIndexedLightEntitySpotlightIndexer().reindexPrimaryLights()
+            Current.Log.info(
+                "Indexed \(summary.indexedCount) Home Assistant lights for Spotlight after app entity cache update"
+                    + serverLogSuffix(serverId: serverId, serverName: serverName)
+            )
+        } catch {
+            Current.Log.error(
+                "Failed to index Home Assistant lights for Spotlight"
+                    + serverLogSuffix(serverId: serverId, serverName: serverName)
+                    + ": \(error)"
+            )
+        }
+    }
+
+    private static func serverLogSuffix(serverId: String, serverName: String?) -> String {
+        if let serverName, serverName.isEmpty == false {
+            return " for \(serverName) (\(serverId))"
+        }
+
+        return " for server \(serverId)"
+    }
+}
+
 private extension String {
     var nilIfEmpty: String? {
         isEmpty ? nil : self

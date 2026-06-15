@@ -96,14 +96,14 @@ struct AppEntitiesModelNameResolutionTests {
             return Dictionary(uniqueKeysWithValues: rows.map { ($0.entityId, $0.name) })
         }
 
-        await AppEntitiesModel().updateModel(entities, server: server)
+        _ = await AppEntitiesModel().updateModel(entities, server: server)
         let names = try await storedNames()
         #expect(names["light.kitchen"] == "Custom Kitchen") // registry `en` preferred over friendly_name
         #expect(names["switch.pump"] == "Pump") // falls back to friendly_name
         #expect(names["sensor.untitled"] == "sensor.untitled") // falls back to entityId
 
         // Idempotent: a second pass with identical data + registry keeps the resolved names stable.
-        await AppEntitiesModel().updateModel(entities, server: server)
+        _ = await AppEntitiesModel().updateModel(entities, server: server)
         let namesAfterSecondPass = try await storedNames()
         #expect(namesAfterSecondPass == names)
     }

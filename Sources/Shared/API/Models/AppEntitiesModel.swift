@@ -3,7 +3,18 @@ import GRDB
 import HAKit
 
 public protocol AppEntitiesModelProtocol {
-    func updateModel(_ entities: Set<HAEntity>, server: Server) async
+    @discardableResult
+    func updateModel(_ entities: Set<HAEntity>, server: Server) async -> AppEntitiesModelUpdateResult
+}
+
+public struct AppEntitiesModelUpdateResult: Equatable, Sendable {
+    public let didUpdateEntities: Bool
+    public let didUpdateLightEntities: Bool
+
+    public static let noChanges = AppEntitiesModelUpdateResult(
+        didUpdateEntities: false,
+        didUpdateLightEntities: false
+    )
 }
 
 public enum HAAppUsedContent {
@@ -35,7 +46,7 @@ final class AppEntitiesModel: AppEntitiesModelProtocol {
     /// ServerId: Int
     private var lastEntitiesCount: [String: Int] = [:]
 
-    public func updateModel(_ entities: Set<HAEntity>, server: Server) async {
+    public func updateModel(_ entities: Set<HAEntity>, server: Server) async -> AppEntitiesModelUpdateResult {
         // Only update database after a few seconds or if the entities count changed
         // First check for time to avoid unnecessary filtering to check count
         if !checkLastDatabaseUpdateRecently(server: server) {
@@ -45,7 +56,7 @@ final class AppEntitiesModel: AppEntitiesModelProtocol {
                     "Updating App Entities for \(server.info.name) checkLastDatabaseUpdateLessThanMinuteAgo false, lastDatabaseUpdate \(String(describing: lastDatabaseUpdate)) "
                 )
             updateLastUpdate(entitiesCount: appRelatedEntities.count, server: server)
-            await handle(appRelatedEntities: appRelatedEntities, server: server)
+            return await handle(appRelatedEntities: appRelatedEntities, server: server)
         } else {
             let appRelatedEntities = filterDomains(entities)
             if lastEntitiesCount[server.identifier.rawValue] != appRelatedEntities.count {
@@ -54,9 +65,11 @@ final class AppEntitiesModel: AppEntitiesModelProtocol {
                         "Updating App Entities for \(server.info.name) entities count diff, count: last \(lastEntitiesCount), new \(appRelatedEntities.count)"
                     )
                 updateLastUpdate(entitiesCount: appRelatedEntities.count, server: server)
-                await handle(appRelatedEntities: appRelatedEntities, server: server)
+                return await handle(appRelatedEntities: appRelatedEntities, server: server)
             }
         }
+
+        return .noChanges
     }
 
     private func updateLastUpdate(entitiesCount: Int, server: Server) {
@@ -74,7 +87,7 @@ final class AppEntitiesModel: AppEntitiesModelProtocol {
         return Date().timeIntervalSince(lastDate) < 15
     }
 
-    private func handle(appRelatedEntities: Set<HAEntity>, server: Server) async {
+    private func handle(appRelatedEntities: Set<HAEntity>, server: Server) async -> AppEntitiesModelUpdateResult {
         let serverId = server.identifier.rawValue
 
         // Resolve each entity's display name from the entity registry (`list_for_display` `en`) once,
@@ -117,6 +130,7 @@ final class AppEntitiesModel: AppEntitiesModelProtocol {
                     .fetchAll(db)
             }
             if appEntities != cachedEntities {
+                let didUpdateLightEntities = lightEntities(from: appEntities) != lightEntities(from: cachedEntities)
                 Current.Log
                     .verbose(
                         "Updating App Entities for \(server.info.name), cached entities were different than new entities"
@@ -133,6 +147,10 @@ final class AppEntitiesModel: AppEntitiesModelProtocol {
                     type: .database,
                     payload: ["entities_count": appEntities.count]
                 ))
+                return AppEntitiesModelUpdateResult(
+                    didUpdateEntities: true,
+                    didUpdateLightEntities: didUpdateLightEntities
+                )
             }
         } catch {
             Current.Log.error("Failed to get cache for App Entities, error: \(error.localizedDescription)")
@@ -142,5 +160,22 @@ final class AppEntitiesModel: AppEntitiesModelProtocol {
                 payload: ["error": error.localizedDescription]
             ))
         }
+
+        return .noChanges
+    }
+
+    private func lightEntities(from entities: [HAAppEntity]) -> [HAAppEntity] {
+        entities.filter { $0.domain == Domain.light.rawValue }
+    }
+}
+
+public extension Notification.Name {
+    static let appEntityCacheDidUpdate = Notification.Name("appEntityCacheDidUpdate")
+}
+
+public extension Notification {
+    enum AppEntityCacheUpdateUserInfo {
+        public static let serverId = "serverId"
+        public static let serverName = "serverName"
     }
 }

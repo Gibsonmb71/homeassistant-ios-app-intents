@@ -59,6 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var shouldRefreshTitleSubscription = false
 
     private var watchCommunicatorService: WatchCommunicatorService?
+    private var lightEntityIndexingObserver: NSObjectProtocol?
 
     func application(
         _ application: UIApplication,
@@ -101,6 +102,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setupModels()
         setupLocalization()
         setupMenus()
+        setupLightEntitySpotlightIndexing()
 
         let launchingForLocation = launchOptions?[.location] != nil
         let event = ClientEvent(
@@ -142,6 +144,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         debugSwift.setup()
         debugSwift.show()
         #endif
+    }
+
+    private func setupLightEntitySpotlightIndexing() {
+        guard #available(iOS 18.0, *) else { return }
+
+        lightEntityIndexingObserver = NotificationCenter.default.addObserver(
+            forName: .appEntityCacheDidUpdate,
+            object: nil,
+            queue: nil
+        ) { notification in
+            guard let serverId = notification.userInfo?[Notification.AppEntityCacheUpdateUserInfo.serverId] as? String else {
+                return
+            }
+            let serverName = notification.userInfo?[Notification.AppEntityCacheUpdateUserInfo.serverName] as? String
+            Task.detached(priority: .background) {
+                await HAIndexedLightEntityIndexingCoordinator.reindexAfterAppEntityCacheUpdate(
+                    serverId: serverId,
+                    serverName: serverName
+                )
+            }
+        }
     }
 
     override func buildMenu(with builder: UIMenuBuilder) {
