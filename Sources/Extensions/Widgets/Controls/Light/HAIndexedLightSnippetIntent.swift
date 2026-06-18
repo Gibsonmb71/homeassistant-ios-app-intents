@@ -1,6 +1,8 @@
 import AppIntents
 import SFSafeSymbols
+import Shared
 import SwiftUI
+import UIKit
 
 @available(iOS 26.0, *)
 struct HAIndexedLightSnippetIntent: SnippetIntent {
@@ -37,9 +39,10 @@ private struct HAIndexedLightSnippetView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack(alignment: .center, spacing: 14) {
-                Image(systemSymbol: state == .on ? .lightbulbFill : .lightbulb)
-                    .font(.system(size: 34, weight: .semibold))
-                    .foregroundStyle(state == .on ? .yellow : .secondary)
+                Image(uiImage: icon.image(
+                    ofSize: .init(width: 34, height: 34),
+                    color: iconColor
+                ))
                     .frame(width: 52, height: 52)
                     .background(.thinMaterial, in: Circle())
 
@@ -93,6 +96,22 @@ private struct HAIndexedLightSnippetView: View {
             return "Unavailable"
         case .unknown:
             return "Unknown"
+        }
+    }
+
+    private var icon: MaterialDesignIcons {
+        MaterialDesignIcons(
+            serversideValueNamed: light.iconName ?? "mdi:lightbulb",
+            fallback: .lightbulbIcon
+        )
+    }
+
+    private var iconColor: UIColor {
+        switch state {
+        case .on:
+            return .systemYellow
+        case .off, .unavailable, .unknown:
+            return .secondaryLabel
         }
     }
 

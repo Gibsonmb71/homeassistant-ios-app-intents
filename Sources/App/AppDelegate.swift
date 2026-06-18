@@ -60,6 +60,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private var watchCommunicatorService: WatchCommunicatorService?
     private var lightEntityIndexingObserver: NSObjectProtocol?
+    private var lightEntityForegroundIndexingObserver: NSObjectProtocol?
+    private var hasRequestedInitialLightEntitySpotlightIndexing = false
 
     func application(
         _ application: UIApplication,
@@ -164,6 +166,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     serverName: serverName
                 )
             }
+        }
+
+        lightEntityForegroundIndexingObserver = NotificationCenter.default.addObserver(
+            forName: UIApplication.didBecomeActiveNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.requestInitialLightEntitySpotlightIndexing()
+        }
+
+        DispatchQueue.main.async { [weak self] in
+            guard UIApplication.shared.applicationState == .active else { return }
+            self?.requestInitialLightEntitySpotlightIndexing()
+        }
+    }
+
+    @available(iOS 18.0, *)
+    private func requestInitialLightEntitySpotlightIndexing() {
+        guard hasRequestedInitialLightEntitySpotlightIndexing == false else { return }
+        hasRequestedInitialLightEntitySpotlightIndexing = true
+
+        Task.detached(priority: .background) {
+            await HAIndexedLightEntityIndexingCoordinator.indexAvailableLights(reason: "app became active")
+
+            // Give the foreground app entity refresh a chance to settle if launch indexing races local cache warmup.
+            try? await Task.sleep(nanoseconds: 10 * NSEC_PER_SEC)
+            await HAIndexedLightEntityIndexingCoordinator.indexAvailableLights(reason: "delayed app became active")
         }
     }
 
