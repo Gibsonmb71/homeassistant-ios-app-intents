@@ -30,6 +30,7 @@
 		072BACCC5B2509E4AF06BFED /* KioskSettingsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14444A34DA125693568C7035 /* KioskSettingsTable.swift */; };
 		0907D6244565287ED4E46A3C /* WhatsNewCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09953104F4749B10268B7C61 /* WhatsNewCatalog.swift */; };
 		0C1F82B6DF9051F98A587352 /* ComplicationEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3995EF7323087AA35F01BDDF /* ComplicationEditView.swift */; };
+		10B4E051FEF3488FB7C20F25 /* OpenIndexedLightIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5951A189B41D4938BBA49B8C /* OpenIndexedLightIntent.swift */; };
 		1100D51F2496F63400B1073C /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1100D51E2496F63400B1073C /* ThemeColors.swift */; };
 		1101568324D770B2009424C9 /* iOSTagManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1161C01624D75BD500A0E3C4 /* iOSTagManager.swift */; };
 		1101568424D770B2009424C9 /* NFCWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113D04E324D76CDB003CE877 /* NFCWriter.swift */; };
@@ -662,7 +663,6 @@
 		423B5E0B2D677B9B0000CB95 /* WidgetCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4223688A2D40F9B7005911E4 /* WidgetCustom.swift */; };
 		423B5E0C2D677BA70000CB95 /* WidgetCustomTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4223688D2D40FB00005911E4 /* WidgetCustomTimelineProvider.swift */; };
 		423B5E0D2D677BB90000CB95 /* WidgetContentMargin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424A7F472B188BF3008C8DF3 /* WidgetContentMargin.swift */; };
-		CA40A11000000000000000B1 /* WidgetCarPlayLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA40A11000000000000000F1 /* WidgetCarPlayLocation.swift */; };
 		423F44F02C17238200766A99 /* ChatBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 423F44EF2C17238200766A99 /* ChatBubbleView.swift */; };
 		423F44FF2C186E4500766A99 /* WatchCommunicatorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 423F44FE2C186E4500766A99 /* WatchCommunicatorService.swift */; };
 		423F45212C19D89100766A99 /* AssistDefaultComplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 423F45202C19D89100766A99 /* AssistDefaultComplication.swift */; };
@@ -685,7 +685,6 @@
 		424A49E02EC5FD3E00524586 /* OpenInBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424A49DF2EC5FD3E00524586 /* OpenInBrowser.swift */; };
 		424A7F462B188946008C8DF3 /* WidgetBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424A7F452B188946008C8DF3 /* WidgetBackground.swift */; };
 		424A7F482B188BF3008C8DF3 /* WidgetContentMargin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424A7F472B188BF3008C8DF3 /* WidgetContentMargin.swift */; };
-		CA40A11000000000000000B2 /* WidgetCarPlayLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA40A11000000000000000F1 /* WidgetCarPlayLocation.swift */; };
 		424D2D102C89DACE00C610F1 /* HAAppEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424D2D0F2C89DACE00C610F1 /* HAAppEntity.swift */; };
 		424DD05A2B3509170057E456 /* CarPlayQuickAccessTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424DD0592B3509170057E456 /* CarPlayQuickAccessTemplate.swift */; };
 		42514C1A2F3E217E008EB858 /* WidgetTodoListAppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42514C192F3E217E008EB858 /* WidgetTodoListAppIntent.swift */; };
@@ -914,8 +913,6 @@
 		42A0B9362EBB82EB00E074BF /* StatusBarButtonsConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A0B9352EBB82EB00E074BF /* StatusBarButtonsConfigurator.swift */; };
 		42A11F212FBD4A4100AA0001 /* HAIntentLightController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A11F202FBD4A4100AA0001 /* HAIntentLightController.swift */; };
 		42A11F222FBD4A4100AA0001 /* HAIntentLightController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A11F202FBD4A4100AA0001 /* HAIntentLightController.swift */; };
-		F508B0719FA8430585A3F87F /* OpenIndexedLightIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5951A189B41D4938BBA49B8C /* OpenIndexedLightIntent.swift */; };
-		10B4E051FEF3488FB7C20F25 /* OpenIndexedLightIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5951A189B41D4938BBA49B8C /* OpenIndexedLightIntent.swift */; };
 		42A1860A2E1D310D004B729A /* HATextField.test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A186092E1D310D004B729A /* HATextField.test.swift */; };
 		42A2AB802C80751E00C5608D /* ControlAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A2AB7F2C80751E00C5608D /* ControlAssist.swift */; };
 		42A32F382EEA393700B323F1 /* CarPlayLockConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A32F372EEA393700B323F1 /* CarPlayLockConfirmation.swift */; };
@@ -1544,6 +1541,8 @@
 		C8860D27D848451A887BC441 /* WatchFolderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA2D62699FC44A99AB37480 /* WatchFolderRow.swift */; };
 		CA0CA15000000000000000A2 /* LocationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0CA15000000000000000A1 /* LocationSettingsView.swift */; };
 		CA0CA15000000000000000B2 /* LocationSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0CA15000000000000000B1 /* LocationSettingsViewModel.swift */; };
+		CA40A11000000000000000B1 /* WidgetCarPlayLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA40A11000000000000000F1 /* WidgetCarPlayLocation.swift */; };
+		CA40A11000000000000000B2 /* WidgetCarPlayLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA40A11000000000000000F1 /* WidgetCarPlayLocation.swift */; };
 		CA6886D02384DA18A91F37DD /* Pods-iOS-Extensions-Intents-metadata.plist in Resources */ = {isa = PBXBuildFile; fileRef = E41A4AAEF642A72ACDB6C006 /* Pods-iOS-Extensions-Intents-metadata.plist */; };
 		CB4D44CC6DBA5176155E157E /* KioskSecretExitGestureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCE1C6F8FA2181C936758465 /* KioskSecretExitGestureView.swift */; };
 		D014EEA92128E192008EA6F5 /* ConnectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D014EEA82128E192008EA6F5 /* ConnectionInfo.swift */; };
@@ -1596,6 +1595,7 @@
 		E60778133EC44B10A61D551C /* TestFlightCommunicationModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212E30CB76DE4ED1B6E317CD /* TestFlightCommunicationModels.swift */; };
 		E92E09E3A93650D56E3C5093 /* KioskScreensaverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CDCFDB29D283A7902A3ABE /* KioskScreensaverViewController.swift */; };
 		F0D1DD41A8F55F6D767EBF37 /* TemplatePreviewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 332C060487B468055C487070 /* TemplatePreviewSection.swift */; };
+		F508B0719FA8430585A3F87F /* OpenIndexedLightIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5951A189B41D4938BBA49B8C /* OpenIndexedLightIntent.swift */; };
 		FC8E9421FDB864726918B612 /* Pods-watchOS-WatchExtension-Watch-metadata.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9249824D575933DFA1530BB2 /* Pods-watchOS-WatchExtension-Watch-metadata.plist */; };
 		FD3BC66329B9FF8F00B19FBE /* CarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD3BC66229B9FF8F00B19FBE /* CarPlaySceneDelegate.swift */; };
 		FD3BC66C29BA00D600B19FBE /* CarPlayEntitiesListTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD3BC66B29BA00D600B19FBE /* CarPlayEntitiesListTemplate.swift */; };
@@ -2469,7 +2469,6 @@
 		424A49DF2EC5FD3E00524586 /* OpenInBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInBrowser.swift; sourceTree = "<group>"; };
 		424A7F452B188946008C8DF3 /* WidgetBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetBackground.swift; sourceTree = "<group>"; };
 		424A7F472B188BF3008C8DF3 /* WidgetContentMargin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetContentMargin.swift; sourceTree = "<group>"; };
-		CA40A11000000000000000F1 /* WidgetCarPlayLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetCarPlayLocation.swift; sourceTree = "<group>"; };
 		424D2D0F2C89DACE00C610F1 /* HAAppEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HAAppEntity.swift; sourceTree = "<group>"; };
 		424DD0592B3509170057E456 /* CarPlayQuickAccessTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarPlayQuickAccessTemplate.swift; sourceTree = "<group>"; };
 		42514C192F3E217E008EB858 /* WidgetTodoListAppIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTodoListAppIntent.swift; sourceTree = "<group>"; };
@@ -2649,7 +2648,6 @@
 		429C721F2B28D0EC00BCD558 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		42A0B9352EBB82EB00E074BF /* StatusBarButtonsConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarButtonsConfigurator.swift; sourceTree = "<group>"; };
 		42A11F202FBD4A4100AA0001 /* HAIntentLightController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HAIntentLightController.swift; sourceTree = "<group>"; };
-		5951A189B41D4938BBA49B8C /* OpenIndexedLightIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenIndexedLightIntent.swift; sourceTree = "<group>"; };
 		42A186092E1D310D004B729A /* HATextField.test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HATextField.test.swift; sourceTree = "<group>"; };
 		42A2AB7F2C80751E00C5608D /* ControlAssist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlAssist.swift; sourceTree = "<group>"; };
 		42A32F372EEA393700B323F1 /* CarPlayLockConfirmation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayLockConfirmation.swift; sourceTree = "<group>"; };
@@ -3091,6 +3089,7 @@
 		512A72C5F1BCC979E74F7629 /* ComplicationEditViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ComplicationEditViewModel.swift; sourceTree = "<group>"; };
 		553A33E097387AA44265DB13 /* Pods-iOS-App-metadata.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "Pods-iOS-App-metadata.plist"; path = "Pods/Pods-iOS-App-metadata.plist"; sourceTree = "<group>"; };
 		592EED7A6C2444872F11C17B /* Pods-iOS-Extensions-NotificationService-metadata.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "Pods-iOS-Extensions-NotificationService-metadata.plist"; path = "Pods/Pods-iOS-Extensions-NotificationService-metadata.plist"; sourceTree = "<group>"; };
+		5951A189B41D4938BBA49B8C /* OpenIndexedLightIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenIndexedLightIntent.swift; sourceTree = "<group>"; };
 		5BFD0D30836C69840AB63A8A /* LoadingButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LoadingButton.swift; sourceTree = "<group>"; };
 		5C50FA39BF16AD0BD782D0D7 /* GRDB+Initialization.test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Database/GRDB+Initialization.test.swift"; sourceTree = "<group>"; };
 		5D4737412F241342009A70EA /* FolderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderDetailView.swift; sourceTree = "<group>"; };
@@ -3474,6 +3473,7 @@
 		C7A3E91F5B8D42A6E0F13B74 /* KioskSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KioskSettingsViewModel.swift; sourceTree = "<group>"; };
 		CA0CA15000000000000000A1 /* LocationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSettingsView.swift; sourceTree = "<group>"; };
 		CA0CA15000000000000000B1 /* LocationSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSettingsViewModel.swift; sourceTree = "<group>"; };
+		CA40A11000000000000000F1 /* WidgetCarPlayLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetCarPlayLocation.swift; sourceTree = "<group>"; };
 		CA722B125EDED73BB36596DA /* Pods-iOS-Extensions-NotificationContent.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS-Extensions-NotificationContent.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iOS-Extensions-NotificationContent/Pods-iOS-Extensions-NotificationContent.debug.xcconfig"; sourceTree = "<group>"; };
 		CB6A8D422BB20D007F14F7BB /* Pods_watchOS_WatchExtension_Watch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_watchOS_WatchExtension_Watch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB911C7BDEB5B6FC0EA67484 /* Pods-Tests-App.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests-App.beta.xcconfig"; path = "Pods/Target Support Files/Pods-Tests-App/Pods-Tests-App.beta.xcconfig"; sourceTree = "<group>"; };
@@ -8028,7 +8028,6 @@
 					};
 					B627CB061D83C87B0057173E = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = QMQYCKL255;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -8084,14 +8083,12 @@
 					};
 					B657A9061CA646EB00121384 = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = QMQYCKL255;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						TestTargetID = B657A8E51CA646EB00121384;
 					};
 					B66C58A4215086F0004AB261 = {
 						CreatedOnToolsVersion = 10.0;
-						DevelopmentTeam = QMQYCKL255;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -8108,13 +8105,11 @@
 					};
 					B67CE82322200D420034C1D0 = {
 						CreatedOnToolsVersion = 10.1;
-						DevelopmentTeam = QMQYCKL255;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
 					B6AAD7A01D827DD40090B220 = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = QMQYCKL255;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -8131,7 +8126,6 @@
 					};
 					B6CC5D812159D10D00833E5D = {
 						CreatedOnToolsVersion = 10.0;
-						DevelopmentTeam = QMQYCKL255;
 						LastSwiftMigration = 1530;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -8142,7 +8136,6 @@
 					};
 					B6CC5D8D2159D10E00833E5D = {
 						CreatedOnToolsVersion = 10.0;
-						DevelopmentTeam = QMQYCKL255;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -8156,13 +8149,11 @@
 					};
 					D03D891620E0A85200D4F28D = {
 						CreatedOnToolsVersion = 9.4.1;
-						DevelopmentTeam = QMQYCKL255;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
 					D03D894120E0BC1800D4F28D = {
 						CreatedOnToolsVersion = 9.4.1;
-						DevelopmentTeam = QMQYCKL255;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
@@ -8688,7 +8679,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "exec $PROJECT_DIR/Configuration/Scripts/fix_xcode_12.5_target_platform_issues.sh\n";
+			shellScript = "exec \"$PROJECT_DIR/Configuration/Scripts/fix_xcode_12.5_target_platform_issues.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		11CCC1BC0A66D040A22FD650 /* [CP] Check Pods Manifest.lock */ = {
@@ -8730,7 +8721,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "exec $PROJECT_DIR/Configuration/Scripts/fix_xcode_12.5_target_platform_issues.sh\n";
+			shellScript = "exec \"$PROJECT_DIR/Configuration/Scripts/fix_xcode_12.5_target_platform_issues.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		14F87973A5C8C429BB3D440C /* [CP] Embed Pods Frameworks */ = {
@@ -11494,7 +11485,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9C4E5E25229D986B0044C8EC /* HomeAssistant.beta.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = QMQYCKL255;
 			};
 			name = Beta;
 		};
@@ -11705,7 +11695,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9C4E5E21229D98220044C8EC /* HomeAssistant.debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = QMQYCKL255;
 			};
 			name = Debug;
 		};
@@ -11713,7 +11702,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9C4E5E22229D98530044C8EC /* HomeAssistant.release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = QMQYCKL255;
 			};
 			name = Release;
 		};

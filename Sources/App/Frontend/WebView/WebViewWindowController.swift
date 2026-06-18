@@ -421,9 +421,17 @@ final class WebViewWindowController {
     }
 
     func navigate(to url: URL, on server: Server, avoidUnnecessaryReload: Bool = false, isComingFromAppIntent: Bool) {
+        Current.Log.info(
+            "Preparing WebView navigation to \(url) on server \(server.identifier), "
+                + "isComingFromAppIntent: \(isComingFromAppIntent)"
+        )
         open(server: server).pipe { result in
             switch result {
             case let .fulfilled(webViewController):
+                Current.Log.info(
+                    "Resolved WebViewController for navigation to \(url), "
+                        + "isComingFromAppIntent: \(isComingFromAppIntent)"
+                )
                 webViewController.dismissOverlayController(animated: true, completion: nil)
                 if isComingFromAppIntent {
                     webViewController.openPanel(url)

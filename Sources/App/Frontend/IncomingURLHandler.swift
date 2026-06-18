@@ -90,6 +90,7 @@ class IncomingURLHandler {
                         webViewController.present(view, animated: true)
                     }
             case .navigate: // homeassistant://navigate/lovelace/dashboard
+                Current.Log.info("Handling navigate deeplink: \(url)")
                 guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
                     return false
                 }
@@ -99,7 +100,7 @@ class IncomingURLHandler {
 
                 let queryParameters = components.queryItems
                 let isFromWidget = components.popWidgetAuthenticity()
-                let serverId = components.queryItems?.first(where: { $0.name == "serverId" })?.value as? String
+                let serverId = components.queryItems?.first(where: { ["server", "serverId"].contains($0.name) })?.value
                 let server = components.popWidgetServer(isFromWidget: isFromWidget) ?? Current.servers.all
                     .first(where: { $0.identifier.rawValue == serverId })
                 let isComingFromAppIntent: Bool = {
@@ -111,9 +112,16 @@ class IncomingURLHandler {
                     }
                 }()
 
+                components.removeAppHandledQueryItems()
+
                 guard let rawURL = components.url?.absoluteString else {
                     return false
                 }
+                Current.Log.info(
+                    "Resolved navigate deeplink to frontend URL string: \(rawURL), "
+                        + "serverId: \(serverId ?? "nil"), isFromWidget: \(isFromWidget), "
+                        + "isComingFromAppIntent: \(isComingFromAppIntent)"
+                )
 
                 if
                     let presenting = windowController.presentedViewController,
@@ -129,13 +137,24 @@ class IncomingURLHandler {
                         )
                     })
                 } else if let server {
-                    windowController.open(
-                        from: .deeplink,
-                        server: server,
-                        urlString: rawURL,
-                        skipConfirm: isFromWidget,
-                        isComingFromAppIntent: isComingFromAppIntent
-                    )
+                    if isComingFromAppIntent,
+                       let frontendURL = server.info.connection.webviewURL(from: rawURL) {
+                        Current.Log.info("Opening app-intent navigate deeplink through webview controller: \(frontendURL)")
+                        windowController.navigate(
+                            to: frontendURL,
+                            on: server,
+                            avoidUnnecessaryReload: false,
+                            isComingFromAppIntent: true
+                        )
+                    } else {
+                        windowController.open(
+                            from: .deeplink,
+                            server: server,
+                            urlString: rawURL,
+                            skipConfirm: isFromWidget,
+                            isComingFromAppIntent: isComingFromAppIntent
+                        )
+                    }
                 } else {
                     windowController.openSelectingServer(
                         from: .deeplink,
@@ -926,6 +945,25 @@ extension IncomingURLHandler {
                 title: L10n.errorLabel,
                 message: L10n.UrlHandler.SendLocation.Error.message(error.localizedDescription)
             )
+        }
+    }
+}
+
+private extension URLComponents {
+    mutating func removeAppHandledQueryItems() {
+        let appHandledQueryItemNames: Set<String> = [
+            "server",
+            "serverId",
+            "avoidUnnecessaryReload",
+            AppConstants.QueryItems.isComingFromAppIntent.rawValue,
+        ]
+
+        queryItems = queryItems?.filter { item in
+            appHandledQueryItemNames.contains(item.name) == false
+        }
+
+        if queryItems?.isEmpty == true {
+            queryItems = nil
         }
     }
 }

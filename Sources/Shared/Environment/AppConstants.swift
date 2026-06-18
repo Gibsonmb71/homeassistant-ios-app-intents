@@ -122,15 +122,25 @@ public enum AppConstants {
         queryParams: String? = nil,
         avoidUnnecessaryReload: Bool
     ) -> URL? {
-        var url = URL(
-            string: "\(AppConstants.deeplinkURL.absoluteString)navigate/\(path)?server=\(serverId)&avoidUnnecessaryReload=\(avoidUnnecessaryReload)&\(AppConstants.QueryItems.isComingFromAppIntent.rawValue)=true"
-        )
-
-        if let queryParams, let newURL = URL(string: "\(url?.absoluteString ?? "")&\(queryParams)") {
-            url = newURL
+        guard var components = URLComponents(
+            string: "\(AppConstants.deeplinkURL.absoluteString)navigate/\(path)"
+        ) else {
+            return nil
         }
 
-        return url
+        var queryItems = [
+            URLQueryItem(name: "server", value: serverId),
+            URLQueryItem(name: "serverId", value: serverId),
+            URLQueryItem(name: "avoidUnnecessaryReload", value: String(avoidUnnecessaryReload)),
+            URLQueryItem(name: AppConstants.QueryItems.isComingFromAppIntent.rawValue, value: "true"),
+        ]
+
+        if let queryParams, let queryComponents = URLComponents(string: "?\(queryParams)") {
+            queryItems.append(contentsOf: queryComponents.queryItems ?? [])
+        }
+
+        components.queryItems = queryItems
+        return components.url
     }
 
     public static func openPageDeeplinkURL(path: String, serverId: String) -> URL? {
