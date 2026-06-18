@@ -14,12 +14,17 @@ struct LightIntent: SetValueIntent {
     var toggle: Bool
 
     func perform() async throws -> some IntentResult {
+        await controlLight()
+        return .result()
+    }
+
+    @discardableResult
+    func controlLight() async -> Bool {
         await HAIntentLightController().control(
             serverId: light.serverId,
             entityId: light.entityId,
             value: value,
             toggle: toggle
         )
-        return .result()
     }
 }

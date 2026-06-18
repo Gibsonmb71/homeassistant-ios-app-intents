@@ -40,7 +40,7 @@ enum HAIndexedLightControlAction: String, AppEnum, Codable, Sendable {
     }
 }
 
-@available(iOS 18.0, *)
+@available(iOS 26.0, *)
 struct ControlIndexedLightIntent: AppIntent {
     static var title: LocalizedStringResource = .init(
         "app_intents.control_indexed_light.title",
@@ -67,18 +67,24 @@ struct ControlIndexedLightIntent: AppIntent {
     @Parameter(title: .init("app_intents.control_indexed_light.action.title", defaultValue: "Action"))
     var action: HAIndexedLightControlAction
 
-    func perform() async throws -> some IntentResult & ProvidesDialog {
-        let didSubmitCommand = await HAIntentLightController().control(
-            serverId: light.serverId,
-            entityId: light.entityId,
-            value: action.value,
-            toggle: action.toggle
-        )
+    func perform() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetIntent {
+        let lightIntent = LightIntent()
+        lightIntent.light = light.intentLightEntity
+        lightIntent.value = action.value
+        lightIntent.toggle = action.toggle
+
+        let didSubmitCommand = await lightIntent.controlLight()
 
         guard didSubmitCommand else {
             throw ShortcutAppIntentError(L10n.AppIntents.Error.noServer)
         }
 
-        return .result(dialog: "\(action.completedDialogPrefix) \(light.displayName).")
+        let snippetIntent = HAIndexedLightSnippetIntent()
+        snippetIntent.light = light
+
+        return .result(
+            dialog: "\(action.completedDialogPrefix) \(light.displayName).",
+            snippetIntent: snippetIntent
+        )
     }
 }
