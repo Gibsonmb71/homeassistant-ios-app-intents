@@ -198,7 +198,7 @@ struct HAIndexedLightEntityQuery: EntityQuery, EntityStringQuery {
     private func collection(matching string: String? = nil) -> IntentItemCollection<HAIndexedLightEntity> {
         .init(sections: primaryLights(matching: string).map { result in
             let (server, lights) = result
-            IntentItemSection<HAIndexedLightEntity>(
+            return IntentItemSection<HAIndexedLightEntity>(
                 .init(stringLiteral: server.info.name),
                 items: lights
             )
@@ -279,10 +279,7 @@ extension HAIndexedLightEntityQuery: IndexedEntityQuery {
     }
 
     private func spotlightIndex(indexDescription: CSSearchableIndexDescription) -> CSSearchableIndex {
-        CSSearchableIndex(
-            name: "home-assistant.lights",
-            protectionClass: indexDescription.protectionClass
-        )
+        HAIndexedLightEntitySpotlightIndexer.spotlightIndex(protectionClass: indexDescription.protectionClass)
     }
 }
 
@@ -292,10 +289,19 @@ struct HAIndexedLightEntitySpotlightIndexer {
         let indexedCount: Int
     }
 
+    static let indexName = "home-assistant.lights"
+
     private let query = HAIndexedLightEntityQuery()
 
+    static func spotlightIndex(protectionClass: FileProtectionType? = nil) -> CSSearchableIndex {
+        CSSearchableIndex(
+            name: indexName,
+            protectionClass: protectionClass
+        )
+    }
+
     func indexPrimaryLights() async throws -> Summary {
-        try await indexPrimaryLights(in: CSSearchableIndex.default())
+        try await indexPrimaryLights(in: Self.spotlightIndex())
     }
 
     func indexPrimaryLights(in index: CSSearchableIndex) async throws -> Summary {
@@ -309,7 +315,7 @@ struct HAIndexedLightEntitySpotlightIndexer {
     }
 
     func reindexPrimaryLights() async throws -> Summary {
-        try await reindexPrimaryLights(in: CSSearchableIndex.default())
+        try await reindexPrimaryLights(in: Self.spotlightIndex())
     }
 
     func reindexPrimaryLights(in index: CSSearchableIndex) async throws -> Summary {
@@ -319,7 +325,7 @@ struct HAIndexedLightEntitySpotlightIndexer {
 
     func deleteLights(identifiedBy identifiers: [String]) async throws {
         guard identifiers.isEmpty == false else { return }
-        try await CSSearchableIndex.default().deleteAppEntities(
+        try await Self.spotlightIndex().deleteAppEntities(
             identifiedBy: identifiers,
             ofType: HAIndexedLightEntity.self
         )
@@ -328,6 +334,19 @@ struct HAIndexedLightEntitySpotlightIndexer {
 
 @available(iOS 18.0, *)
 enum HAIndexedLightEntityIndexingCoordinator {
+    static func indexAvailableLights(reason: String) async {
+        do {
+            let summary = try await HAIndexedLightEntitySpotlightIndexer().indexPrimaryLights()
+            Current.Log.info(
+                "Indexed \(summary.indexedCount) Home Assistant lights for Spotlight (\(reason))"
+            )
+        } catch {
+            Current.Log.error(
+                "Failed to index Home Assistant lights for Spotlight (\(reason)): \(error)"
+            )
+        }
+    }
+
     static func reindexAfterAppEntityCacheUpdate(serverId: String, serverName: String?) async {
         do {
             let summary = try await HAIndexedLightEntitySpotlightIndexer().reindexPrimaryLights()

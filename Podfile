@@ -90,7 +90,7 @@ abstract_target 'iOS' do
 end
 
 abstract_target 'watchOS' do
-  platform :watchos, '8.0'
+  platform :watchos, '9.0'
 
   target 'Shared-watchOS' do
     shared_fwk_pods
@@ -104,8 +104,13 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
-      config.build_settings['WATCHOS_DEPLOYMENT_TARGET'] = '8.0'
+      config.build_settings['WATCHOS_DEPLOYMENT_TARGET'] = '9.0'
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+      config.build_settings['__DIAGNOSE_INVALID_DEPLOYMENT_TARGET_AS_ERROR'] = 'NO'
+      config.build_settings['__DIAGNOSE_DEPRECATED_ARCHS'] = 'NO'
+      config.build_settings['ENABLE_DEBUG_DYLIB'] = 'NO'
+      config.build_settings['EXCLUDED_ARCHS[sdk=watchos*]'] = 'armv7k'
+      config.build_settings['EXCLUDED_ARCHS[sdk=watchsimulator*]'] = 'x86_64'
 
       config.build_settings['SWIFT_INSTALL_OBJC_HEADER'] = 'NO' unless target.name.include? 'Firebase'
 
@@ -125,5 +130,17 @@ post_install do |installer|
       end
     end
     # rubocop:enable Style/Next
+  end
+
+  realm_swiftui_path = installer.sandbox.root + 'RealmSwift/RealmSwift/SwiftUI.swift'
+  if File.exist?(realm_swiftui_path)
+    realm_swiftui = File.read(realm_swiftui_path)
+    patched_realm_swiftui = realm_swiftui
+                            .gsub('@State public var `where`:', '@State public var whereFilter:')
+                            .gsub('self.where = `where`', 'self.whereFilter = `where`')
+    if patched_realm_swiftui != realm_swiftui
+      File.chmod(0o644, realm_swiftui_path)
+      File.write(realm_swiftui_path, patched_realm_swiftui)
+    end
   end
 end

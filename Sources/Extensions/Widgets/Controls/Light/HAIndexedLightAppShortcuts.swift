@@ -6,16 +6,41 @@ struct HAIndexedLightAppShortcuts: AppShortcutsProvider {
 
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
-            intent: ControlIndexedLightIntent(),
+            intent: ControlIndexedLightIntent(action: .turnOn),
             phrases: [
-                "\(\.$action) \(\.$light) in \(.applicationName)",
-                "\(\.$action) my \(\.$light) in \(.applicationName)",
+                "Turn on \(\.$light) in \(.applicationName)",
+                "Switch on \(\.$light) in \(.applicationName)",
             ],
             shortTitle: .init(
-                "app_shortcuts.indexed_light_control.short_title",
-                defaultValue: "Control Light"
+                "app_shortcuts.indexed_light_turn_on.short_title",
+                defaultValue: "Turn On Light"
             ),
             systemImageName: "lightbulb.fill"
+        )
+
+        AppShortcut(
+            intent: ControlIndexedLightIntent(action: .turnOff),
+            phrases: [
+                "Turn off \(\.$light) in \(.applicationName)",
+                "Switch off \(\.$light) in \(.applicationName)",
+            ],
+            shortTitle: .init(
+                "app_shortcuts.indexed_light_turn_off.short_title",
+                defaultValue: "Turn Off Light"
+            ),
+            systemImageName: "lightbulb"
+        )
+
+        AppShortcut(
+            intent: ControlIndexedLightIntent(action: .toggle),
+            phrases: [
+                "Toggle \(\.$light) in \(.applicationName)",
+            ],
+            shortTitle: .init(
+                "app_shortcuts.indexed_light_toggle.short_title",
+                defaultValue: "Toggle Light"
+            ),
+            systemImageName: "lightbulb.2"
         )
 
         AppShortcut(
