@@ -308,18 +308,22 @@ class IncomingURLHandler {
         }
     }
 
-    private func openIndexedEntity(identifiedBy indexedEntityId: String, source: String) -> Bool {
-        guard indexedEntityId.isEmpty == false else {
+    private func openIndexedEntity(identifiedBy rawIndexedEntityId: String, source: String) -> Bool {
+        guard rawIndexedEntityId.isEmpty == false else {
             Current.Log.error("Unable to open empty indexed entity identifier from \(source)")
             return false
         }
 
-        Current.Log.info("Opening indexed entity from \(source): \(indexedEntityId)")
+        let indexedEntityId = normalizedIndexedEntityIdentifier(rawIndexedEntityId)
+        Current.Log.info("Opening indexed entity from \(source): \(rawIndexedEntityId)")
 
         guard let server = Current.servers.all.first(where: { server in
             indexedEntityId.hasPrefix("\(server.identifier.rawValue)-")
         }) else {
-            Current.Log.error("No server found for indexed entity identifier from \(source): \(indexedEntityId)")
+            Current.Log.error(
+                "No server found for indexed entity identifier from \(source): "
+                    + "\(rawIndexedEntityId) (normalized: \(indexedEntityId))"
+            )
             return false
         }
 
@@ -334,6 +338,14 @@ class IncomingURLHandler {
 
         Current.Log.info("Resolved indexed entity \(indexedEntityId) to deeplink: \(url)")
         return handle(url: url)
+    }
+
+    private func normalizedIndexedEntityIdentifier(_ identifier: String) -> String {
+        identifier
+            .removingPercentEncoding?
+            .components(separatedBy: "/")
+            .last
+            .flatMap { $0.isEmpty ? nil : $0 } ?? identifier
     }
 
     func handle(shortcutItem: UIApplicationShortcutItem) -> Promise<Void> {
