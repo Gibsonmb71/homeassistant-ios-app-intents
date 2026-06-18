@@ -198,7 +198,7 @@ struct HAIndexedLightEntityQuery: EntityQuery, EntityStringQuery {
     private func collection(matching string: String? = nil) -> IntentItemCollection<HAIndexedLightEntity> {
         .init(sections: primaryLights(matching: string).map { result in
             let (server, lights) = result
-            IntentItemSection<HAIndexedLightEntity>(
+            return IntentItemSection<HAIndexedLightEntity>(
                 .init(stringLiteral: server.info.name),
                 items: lights
             )

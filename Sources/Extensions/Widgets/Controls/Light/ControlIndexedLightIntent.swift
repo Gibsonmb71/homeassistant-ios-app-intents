@@ -67,6 +67,14 @@ struct ControlIndexedLightIntent: AppIntent {
     @Parameter(title: .init("app_intents.control_indexed_light.action.title", defaultValue: "Action"))
     var action: HAIndexedLightControlAction
 
+    init() {
+        action = .turnOn
+    }
+
+    init(action: HAIndexedLightControlAction) {
+        self.action = action
+    }
+
     func perform() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetIntent {
         let lightIntent = LightIntent()
         lightIntent.light = light.intentLightEntity
