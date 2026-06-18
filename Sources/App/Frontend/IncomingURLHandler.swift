@@ -19,6 +19,7 @@ class IncomingURLHandler {
         case fireEvent = "fire_event"
         case sendLocation = "send_location"
         case assist
+        case entity
         case navigate
         case invite
         case createCustomWidget = "createcustomwidget"
@@ -168,6 +169,28 @@ class IncomingURLHandler {
                             autoStartRecording: startlistening
                         )
                     }
+            case .entity:
+                guard #available(iOS 18.0, *) else { return false }
+                let indexedEntityId = url.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+                guard indexedEntityId.isEmpty == false else { return false }
+
+                guard let server = Current.servers.all.first(where: { server in
+                    indexedEntityId.hasPrefix("\(server.identifier.rawValue)-")
+                }) else {
+                    Current.Log.error("No server found for indexed entity URL: \(url)")
+                    return false
+                }
+
+                let entityId = String(indexedEntityId.dropFirst(server.identifier.rawValue.count + 1))
+                guard let url = AppConstants.openEntityDeeplinkURL(
+                    entityId: entityId,
+                    serverId: server.identifier.rawValue
+                ) else {
+                    Current.Log.error("Unable to build entity deeplink for indexed entity URL: \(indexedEntityId)")
+                    return false
+                }
+
+                return handle(url: url)
             case .createCustomWidget:
                 Current.sceneManager.webViewWindowControllerPromise.then(\.webViewControllerPromise)
                     .done { webViewController in

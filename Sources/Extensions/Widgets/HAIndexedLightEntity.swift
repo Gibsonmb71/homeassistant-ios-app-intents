@@ -53,9 +53,24 @@ enum HAIntentLightEntityVisibility: Sendable {
 }
 
 @available(iOS 18.0, *)
-struct HAIndexedLightEntity: IndexedEntity, Sendable {
-    static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "Home Assistant Light")
+struct HAIndexedLightEntity: IndexedEntity, URLRepresentableEntity, Sendable {
+    static let typeDisplayRepresentation = TypeDisplayRepresentation(
+        name: "Home Assistant Light",
+        synonyms: [
+            "light",
+            "lamp",
+        ]
+    )
     static let defaultQuery = HAIndexedLightEntityQuery()
+    static var urlRepresentation: URLRepresentation {
+        #if DEBUG
+        "homeassistant-dev://entity/\(.id)"
+        #elseif BETA
+        "homeassistant-beta://entity/\(.id)"
+        #else
+        "homeassistant://entity/\(.id)"
+        #endif
+    }
 
     let id: String
     let entityId: String
@@ -82,7 +97,8 @@ struct HAIndexedLightEntity: IndexedEntity, Sendable {
         DisplayRepresentation(
             title: .init(stringLiteral: displayName),
             subtitle: .init(stringLiteral: subtitle),
-            image: .init(systemName: SFSymbol.lightbulbFill.rawValue)
+            image: .init(systemName: SFSymbol.lightbulbFill.rawValue),
+            synonyms: displaySynonyms.map { .init(stringLiteral: $0) }
         )
     }
 
@@ -93,9 +109,11 @@ struct HAIndexedLightEntity: IndexedEntity, Sendable {
         attributes.alternateNames = alternateNames
         attributes.keywords = keywords
         attributes.contentDescription = contentDescription
+        attributes.contentURL = AppConstants.openEntityDeeplinkURL(entityId: entityId, serverId: serverId)
         attributes.domainIdentifier = "home-assistant.lights.\(serverId)"
         attributes.containerIdentifier = serverId
         attributes.containerTitle = areaName ?? serverName
+        attributes.relatedUniqueIdentifier = id
         attributes.userOwned = NSNumber(value: true)
         attributes.userCurated = NSNumber(value: true)
         attributes.rankingHint = NSNumber(value: 80)
@@ -121,15 +139,12 @@ struct HAIndexedLightEntity: IndexedEntity, Sendable {
 
     private var contentDescription: String {
         [
-            displayName,
             Domain.light.localizedDescription,
-            areaName,
-            deviceName,
-            serverName,
-            entityId,
+            areaName.map { "in \($0)" },
+            areaName == nil ? serverName : nil,
         ]
         .compactMap { $0?.nilIfEmpty }
-        .joined(separator: ", ")
+        .joined(separator: " ")
     }
 
     private var alternateNames: [String] {
@@ -137,8 +152,21 @@ struct HAIndexedLightEntity: IndexedEntity, Sendable {
             entityId,
             entityId.replacingOccurrences(of: ".", with: " "),
             entityId.replacingOccurrences(of: "_", with: " "),
+            displayName.nilIfDuplicate(of: entityId),
+        ]
+        .compactMap { $0?.nilIfEmpty }
+        + displaySynonyms
+    }
+
+    private var displaySynonyms: [String] {
+        [
             deviceName?.nilIfDuplicate(of: displayName),
             areaName,
+            areaName.map { "\($0) light" },
+            areaName.map { "\($0) lights" },
+            areaName.map { "\($0) lamp" },
+            deviceName.map { "\($0) light" },
+            deviceName.map { "\($0) lamp" },
         ]
         .compactMap { $0?.nilIfEmpty }
         .deduplicatedCaseInsensitive()
@@ -160,7 +188,7 @@ struct HAIndexedLightEntity: IndexedEntity, Sendable {
             areaName,
             deviceName,
             iconName,
-        ].compactMap { $0?.nilIfEmpty }
+        ].compactMap { $0?.nilIfEmpty } + displaySynonyms
     }
 }
 
