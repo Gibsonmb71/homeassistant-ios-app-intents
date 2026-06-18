@@ -120,6 +120,10 @@ struct HAIndexedLightEntity: IndexedEntity, URLRepresentableEntity, Sendable {
         return attributes
     }
 
+    var urlRepresentation: URL? {
+        AppConstants.openEntityDeeplinkURL(entityId: entityId, serverId: serverId)
+    }
+
     func matches(_ string: String) -> Bool {
         guard string.isEmpty == false else { return true }
         return searchableFields.contains { field in

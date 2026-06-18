@@ -32,19 +32,6 @@ struct HAIntentLightController {
         return true
     }
 
-    func currentState(serverId: String, entityId: String) async -> String? {
-        await Current.connectivity.syncNetworkInformation()
-        do {
-            return try await ControlEntityProvider(domains: [.light]).currentState(
-                serverId: serverId,
-                entityId: entityId
-            )
-        } catch {
-            Current.Log.error("Failed to fetch light state for \(entityId): \(error)")
-            return nil
-        }
-    }
-
     private func service(value: Bool, toggle: Bool) -> String {
         if toggle {
             return Service.toggle.rawValue

@@ -912,16 +912,10 @@
 		429C72202B28D0EC00BCD558 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 429C721F2B28D0EC00BCD558 /* Haptics.swift */; };
 		429C82892DCCDB0F007B03AF /* HAProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E4C9922DCC9A6600DF2813 /* HAProgressView.swift */; };
 		42A0B9362EBB82EB00E074BF /* StatusBarButtonsConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A0B9352EBB82EB00E074BF /* StatusBarButtonsConfigurator.swift */; };
-		42A11F1D2FBD4A4300AA0001 /* ControlIndexedLightIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A11F1C2FBD4A4300AA0001 /* ControlIndexedLightIntent.swift */; };
-		42A11F1E2FBD4A4300AA0001 /* ControlIndexedLightIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A11F1C2FBD4A4300AA0001 /* ControlIndexedLightIntent.swift */; };
 		42A11F212FBD4A4100AA0001 /* HAIntentLightController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A11F202FBD4A4100AA0001 /* HAIntentLightController.swift */; };
 		42A11F222FBD4A4100AA0001 /* HAIntentLightController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A11F202FBD4A4100AA0001 /* HAIntentLightController.swift */; };
-		42A11F242FBD900100AA0001 /* GetIndexedLightStateIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A11F232FBD900100AA0001 /* GetIndexedLightStateIntent.swift */; };
-		42A11F252FBD900100AA0001 /* GetIndexedLightStateIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A11F232FBD900100AA0001 /* GetIndexedLightStateIntent.swift */; };
-		42A11F272FBE59D400AA0001 /* HAIndexedLightAppShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A11F262FBE59D400AA0001 /* HAIndexedLightAppShortcuts.swift */; };
-		42A11F282FBE59D400AA0001 /* HAIndexedLightAppShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A11F262FBE59D400AA0001 /* HAIndexedLightAppShortcuts.swift */; };
-		42A11F2A2FBE59D500AA0001 /* HAIndexedLightSnippetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A11F292FBE59D500AA0001 /* HAIndexedLightSnippetIntent.swift */; };
-		42A11F2B2FBE59D500AA0001 /* HAIndexedLightSnippetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A11F292FBE59D500AA0001 /* HAIndexedLightSnippetIntent.swift */; };
+		F508B0719FA8430585A3F87F /* OpenIndexedLightIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5951A189B41D4938BBA49B8C /* OpenIndexedLightIntent.swift */; };
+		10B4E051FEF3488FB7C20F25 /* OpenIndexedLightIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5951A189B41D4938BBA49B8C /* OpenIndexedLightIntent.swift */; };
 		42A1860A2E1D310D004B729A /* HATextField.test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A186092E1D310D004B729A /* HATextField.test.swift */; };
 		42A2AB802C80751E00C5608D /* ControlAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A2AB7F2C80751E00C5608D /* ControlAssist.swift */; };
 		42A32F382EEA393700B323F1 /* CarPlayLockConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A32F372EEA393700B323F1 /* CarPlayLockConfirmation.swift */; };
@@ -2654,11 +2648,8 @@
 		429C33C12F17A7010033EF5E /* HAUsagePredictionCommonControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HAUsagePredictionCommonControl.swift; sourceTree = "<group>"; };
 		429C721F2B28D0EC00BCD558 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		42A0B9352EBB82EB00E074BF /* StatusBarButtonsConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarButtonsConfigurator.swift; sourceTree = "<group>"; };
-		42A11F1C2FBD4A4300AA0001 /* ControlIndexedLightIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlIndexedLightIntent.swift; sourceTree = "<group>"; };
 		42A11F202FBD4A4100AA0001 /* HAIntentLightController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HAIntentLightController.swift; sourceTree = "<group>"; };
-		42A11F232FBD900100AA0001 /* GetIndexedLightStateIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetIndexedLightStateIntent.swift; sourceTree = "<group>"; };
-		42A11F262FBE59D400AA0001 /* HAIndexedLightAppShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HAIndexedLightAppShortcuts.swift; sourceTree = "<group>"; };
-		42A11F292FBE59D500AA0001 /* HAIndexedLightSnippetIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HAIndexedLightSnippetIntent.swift; sourceTree = "<group>"; };
+		5951A189B41D4938BBA49B8C /* OpenIndexedLightIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenIndexedLightIntent.swift; sourceTree = "<group>"; };
 		42A186092E1D310D004B729A /* HATextField.test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HATextField.test.swift; sourceTree = "<group>"; };
 		42A2AB7F2C80751E00C5608D /* ControlAssist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlAssist.swift; sourceTree = "<group>"; };
 		42A32F372EEA393700B323F1 /* CarPlayLockConfirmation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayLockConfirmation.swift; sourceTree = "<group>"; };
@@ -4709,14 +4700,11 @@
 			isa = PBXGroup;
 			children = (
 				420461682C8F29440062E89F /* ControlLight.swift */,
-				42A11F1C2FBD4A4300AA0001 /* ControlIndexedLightIntent.swift */,
 				4276471F2C8F36950027B21F /* ControlLightsValueProvider.swift */,
-				42A11F232FBD900100AA0001 /* GetIndexedLightStateIntent.swift */,
-				42A11F262FBE59D400AA0001 /* HAIndexedLightAppShortcuts.swift */,
 				42A11F202FBD4A4100AA0001 /* HAIntentLightController.swift */,
-				42A11F292FBE59D500AA0001 /* HAIndexedLightSnippetIntent.swift */,
 				4276471D2C8F2F100027B21F /* IntentLightEntity.swift */,
 				427647212C8F36DB0027B21F /* LightIntent.swift */,
+				5951A189B41D4938BBA49B8C /* OpenIndexedLightIntent.swift */,
 			);
 			path = Light;
 			sourceTree = "<group>";
@@ -9145,11 +9133,8 @@
 				420E2AE32C4746BB004921D8 /* WidgetBasicViewModel.swift in Sources */,
 				42A935A22C7FEBA100FCF504 /* ControlScript.swift in Sources */,
 				427647222C8F36DB0027B21F /* LightIntent.swift in Sources */,
-				42A11F1D2FBD4A4300AA0001 /* ControlIndexedLightIntent.swift in Sources */,
 				42A11F212FBD4A4100AA0001 /* HAIntentLightController.swift in Sources */,
-				42A11F242FBD900100AA0001 /* GetIndexedLightStateIntent.swift in Sources */,
-				42A11F272FBE59D400AA0001 /* HAIndexedLightAppShortcuts.swift in Sources */,
-				42A11F2A2FBE59D500AA0001 /* HAIndexedLightSnippetIntent.swift in Sources */,
+				F508B0719FA8430585A3F87F /* OpenIndexedLightIntent.swift in Sources */,
 				42F158482CA15FA7009C7201 /* SwitchIntent.swift in Sources */,
 				42C1012A2CD3DB8A0012BA78 /* CoverIntent.swift in Sources */,
 				426CBB6C2C9C550D003CA3AC /* IntentSwitchEntity.swift in Sources */,
@@ -9429,11 +9414,8 @@
 				427FEE092D9C04050047C00C /* OnboardingServersListViewModel.swift in Sources */,
 				420FE84E2B556CE500878E06 /* CarPlayEntitiesListViewModel.swift in Sources */,
 				4263A6662EFB291D0089C338 /* LightIntent.swift in Sources */,
-				42A11F1E2FBD4A4300AA0001 /* ControlIndexedLightIntent.swift in Sources */,
 				42A11F222FBD4A4100AA0001 /* HAIntentLightController.swift in Sources */,
-				42A11F252FBD900100AA0001 /* GetIndexedLightStateIntent.swift in Sources */,
-				42A11F282FBE59D400AA0001 /* HAIndexedLightAppShortcuts.swift in Sources */,
-				42A11F2B2FBE59D500AA0001 /* HAIndexedLightSnippetIntent.swift in Sources */,
+				10B4E051FEF3488FB7C20F25 /* OpenIndexedLightIntent.swift in Sources */,
 				11195F71267EFE2C003DF674 /* NotificationManagerLocalPushInterfaceUnsupported.swift in Sources */,
 				428CB3372CF7FC0800F1320E /* WidgetFamilySizes.swift in Sources */,
 				424627332C98D8E900EF7B43 /* WidgetBasicViewTintedWrapper.swift in Sources */,
