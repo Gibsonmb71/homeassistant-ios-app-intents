@@ -88,3 +88,10 @@ vendor/bundle
 .bundle/
 .claude/settings.local.json
 /.claude/worktrees
+
+# Xcode local/user-specific files
+*.xcuserstate
+xcuserdata/
+*.xccheckout
+*.moved-aside
+DerivedData/
