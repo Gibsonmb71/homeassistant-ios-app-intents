@@ -90,7 +90,7 @@ abstract_target 'iOS' do
 end
 
 abstract_target 'watchOS' do
-  platform :watchos, '9.0'
+  platform :watchos, '8.0'
 
   target 'Shared-watchOS' do
     shared_fwk_pods
@@ -104,8 +104,11 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
-      config.build_settings['WATCHOS_DEPLOYMENT_TARGET'] = '9.0'
+      config.build_settings['WATCHOS_DEPLOYMENT_TARGET'] = '8.0'
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+      config.build_settings['__DIAGNOSE_INVALID_DEPLOYMENT_TARGET_AS_ERROR'] = 'NO'
+      config.build_settings['__DIAGNOSE_DEPRECATED_ARCHS'] = 'NO'
+      config.build_settings['ENABLE_DEBUG_DYLIB'] = 'NO'
 
       config.build_settings['SWIFT_INSTALL_OBJC_HEADER'] = 'NO' unless target.name.include? 'Firebase'
 

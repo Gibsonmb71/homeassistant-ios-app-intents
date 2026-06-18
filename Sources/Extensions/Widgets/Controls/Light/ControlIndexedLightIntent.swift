@@ -52,6 +52,7 @@ struct ControlIndexedLightIntent: AppIntent {
         defaultValue: "Control an indexed Home Assistant light"
     ))
 
+    static var isDiscoverable = false
     static var openAppWhenRun = false
 
     static var parameterSummary: some ParameterSummary {

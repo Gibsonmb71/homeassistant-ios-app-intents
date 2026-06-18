@@ -53,9 +53,10 @@ enum HAIntentLightEntityVisibility: Sendable {
 }
 
 @available(iOS 18.0, *)
-struct HAIndexedLightEntity: IndexedEntity, Sendable {
+struct HAIndexedLightEntity: IndexedEntity, URLRepresentableEntity, Sendable {
     static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "Home Assistant Light")
     static let defaultQuery = HAIndexedLightEntityQuery()
+    static let urlRepresentation: EntityURLRepresentation<HAIndexedLightEntity> = "homeassistant://light/\(.id)"
 
     let id: String
     let entityId: String
@@ -88,6 +89,10 @@ struct HAIndexedLightEntity: IndexedEntity, Sendable {
         attributes.userCurated = NSNumber(value: true)
         attributes.rankingHint = NSNumber(value: 80)
         return attributes
+    }
+
+    var urlRepresentation: URL? {
+        AppConstants.openEntityDeeplinkURL(entityId: entityId, serverId: serverId)
     }
 
     func matches(_ string: String) -> Bool {
