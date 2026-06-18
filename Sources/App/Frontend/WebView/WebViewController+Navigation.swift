@@ -47,11 +47,25 @@ extension WebViewController {
         }
 
         let urlPathIncludingQueryParams = {
-            // If the URL has query parameters, we need to include them in the path to ensure proper navigation
-            if let query = url.query, !query.isEmpty {
-                return "\(url.path)?\(query)"
+            guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+                if let query = url.query, !query.isEmpty {
+                    return "\(url.path)?\(query)"
+                }
+                return url.path
             }
-            return url.path
+
+            components.scheme = nil
+            components.host = nil
+            components.port = nil
+            components.user = nil
+            components.password = nil
+            components.queryItems = components.queryItems?.filter { $0.name != "external_auth" }
+
+            if components.queryItems?.isEmpty == true {
+                components.queryItems = nil
+            }
+
+            return components.url?.absoluteString ?? url.path
         }()
 
         Current.Log.info("Requesting frontend panel navigation path: \(urlPathIncludingQueryParams)")
@@ -82,8 +96,10 @@ extension WebViewController {
         )).pipe { result in
             switch result {
             case .fulfilled:
+                Current.Log.info("Frontend navigation through external bus succeeded for path: \(path)")
                 completion(true)
             case .rejected:
+                Current.Log.warning("Frontend navigation through external bus failed for path: \(path)")
                 completion(false)
             }
         }
