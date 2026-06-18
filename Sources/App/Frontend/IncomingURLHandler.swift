@@ -1,4 +1,5 @@
 import CallbackURLKit
+import CoreSpotlight
 import Foundation
 import PromiseKit
 import SafariServices
@@ -170,27 +171,8 @@ class IncomingURLHandler {
                         )
                     }
             case .entity:
-                guard #available(iOS 18.0, *) else { return false }
                 let indexedEntityId = url.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
-                guard indexedEntityId.isEmpty == false else { return false }
-
-                guard let server = Current.servers.all.first(where: { server in
-                    indexedEntityId.hasPrefix("\(server.identifier.rawValue)-")
-                }) else {
-                    Current.Log.error("No server found for indexed entity URL: \(url)")
-                    return false
-                }
-
-                let entityId = String(indexedEntityId.dropFirst(server.identifier.rawValue.count + 1))
-                guard let url = AppConstants.openEntityDeeplinkURL(
-                    entityId: entityId,
-                    serverId: server.identifier.rawValue
-                ) else {
-                    Current.Log.error("Unable to build entity deeplink for indexed entity URL: \(indexedEntityId)")
-                    return false
-                }
-
-                return handle(url: url)
+                return openIndexedEntity(identifiedBy: indexedEntityId, source: "entity URL")
             case .createCustomWidget:
                 Current.sceneManager.webViewWindowControllerPromise.then(\.webViewControllerPromise)
                     .done { webViewController in
@@ -248,6 +230,15 @@ class IncomingURLHandler {
     @discardableResult
     func handle(userActivity: NSUserActivity) -> Bool {
         Current.Log.info(userActivity)
+
+        if userActivity.activityType == CSSearchableItemActionType {
+            guard let identifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String else {
+                Current.Log.error("Spotlight activity missing indexed entity identifier: \(userActivity.userInfo ?? [:])")
+                return false
+            }
+
+            return openIndexedEntity(identifiedBy: identifier, source: "Spotlight activity")
+        }
 
         if let assistInAppIntent = userActivity.interaction?.intent as? AssistInAppIntent {
             guard let server = Current.servers.server(for: assistInAppIntent) ?? Current.servers.all.first else { return false }
@@ -315,6 +306,34 @@ class IncomingURLHandler {
                 return false
             }
         }
+    }
+
+    private func openIndexedEntity(identifiedBy indexedEntityId: String, source: String) -> Bool {
+        guard indexedEntityId.isEmpty == false else {
+            Current.Log.error("Unable to open empty indexed entity identifier from \(source)")
+            return false
+        }
+
+        Current.Log.info("Opening indexed entity from \(source): \(indexedEntityId)")
+
+        guard let server = Current.servers.all.first(where: { server in
+            indexedEntityId.hasPrefix("\(server.identifier.rawValue)-")
+        }) else {
+            Current.Log.error("No server found for indexed entity identifier from \(source): \(indexedEntityId)")
+            return false
+        }
+
+        let entityId = String(indexedEntityId.dropFirst(server.identifier.rawValue.count + 1))
+        guard let url = AppConstants.openEntityDeeplinkURL(
+            entityId: entityId,
+            serverId: server.identifier.rawValue
+        ) else {
+            Current.Log.error("Unable to build entity deeplink for indexed entity identifier: \(indexedEntityId)")
+            return false
+        }
+
+        Current.Log.info("Resolved indexed entity \(indexedEntityId) to deeplink: \(url)")
+        return handle(url: url)
     }
 
     func handle(shortcutItem: UIApplicationShortcutItem) -> Promise<Void> {
