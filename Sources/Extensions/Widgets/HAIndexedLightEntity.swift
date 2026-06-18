@@ -66,6 +66,18 @@ struct HAIndexedLightEntity: IndexedEntity, Sendable {
     let deviceName: String?
     let iconName: String?
 
+    var intentLightEntity: IntentLightEntity {
+        IntentLightEntity(
+            id: id,
+            entityId: entityId,
+            serverId: serverId,
+            areaName: areaName,
+            deviceName: deviceName,
+            displayString: displayName,
+            iconName: iconName ?? SFSymbol.lightbulbFill.rawValue
+        )
+    }
+
     var displayRepresentation: DisplayRepresentation {
         DisplayRepresentation(
             title: .init(stringLiteral: displayName),
@@ -238,6 +250,42 @@ struct HAIndexedLightEntityQuery: EntityQuery, EntityStringQuery {
     }
 }
 
+@available(iOS 27.0, *)
+extension HAIndexedLightEntityQuery: IndexedEntityQuery {
+    func reindexEntities(
+        for identifiers: [HAIndexedLightEntity.ID],
+        indexDescription: CSSearchableIndexDescription
+    ) async throws {
+        let index = spotlightIndex(indexDescription: indexDescription)
+        let lights = try await entities(for: identifiers)
+        let indexedIdentifiers = Set(lights.map(\.id))
+        let staleIdentifiers = identifiers.filter { indexedIdentifiers.contains($0) == false }
+
+        if staleIdentifiers.isEmpty == false {
+            try await index.deleteAppEntities(
+                identifiedBy: staleIdentifiers,
+                ofType: HAIndexedLightEntity.self
+            )
+        }
+
+        if lights.isEmpty == false {
+            try await index.indexAppEntities(lights)
+        }
+    }
+
+    func reindexAllEntities(indexDescription: CSSearchableIndexDescription) async throws {
+        let index = spotlightIndex(indexDescription: indexDescription)
+        try await HAIndexedLightEntitySpotlightIndexer().reindexPrimaryLights(in: index)
+    }
+
+    private func spotlightIndex(indexDescription: CSSearchableIndexDescription) -> CSSearchableIndex {
+        CSSearchableIndex(
+            name: "home-assistant.lights",
+            protectionClass: indexDescription.protectionClass
+        )
+    }
+}
+
 @available(iOS 18.0, *)
 struct HAIndexedLightEntitySpotlightIndexer {
     struct Summary: Sendable {
@@ -247,18 +295,26 @@ struct HAIndexedLightEntitySpotlightIndexer {
     private let query = HAIndexedLightEntityQuery()
 
     func indexPrimaryLights() async throws -> Summary {
+        try await indexPrimaryLights(in: CSSearchableIndex.default())
+    }
+
+    func indexPrimaryLights(in index: CSSearchableIndex) async throws -> Summary {
         let lights = query.primaryLights().flatMap(\.1)
         guard lights.isEmpty == false else {
             return Summary(indexedCount: 0)
         }
 
-        try await CSSearchableIndex.default().indexAppEntities(lights)
+        try await index.indexAppEntities(lights)
         return Summary(indexedCount: lights.count)
     }
 
     func reindexPrimaryLights() async throws -> Summary {
-        try await CSSearchableIndex.default().deleteAppEntities(ofType: HAIndexedLightEntity.self)
-        return try await indexPrimaryLights()
+        try await reindexPrimaryLights(in: CSSearchableIndex.default())
+    }
+
+    func reindexPrimaryLights(in index: CSSearchableIndex) async throws -> Summary {
+        try await index.deleteAppEntities(ofType: HAIndexedLightEntity.self)
+        return try await indexPrimaryLights(in: index)
     }
 
     func deleteLights(identifiedBy identifiers: [String]) async throws {
