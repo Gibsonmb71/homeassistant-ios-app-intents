@@ -37,6 +37,7 @@ extension WebViewController {
     /// Used for OpenPage intent
     func openPanel(_ url: URL) {
         loadViewIfNeeded()
+        Current.Log.info("Opening frontend panel URL: \(url)")
 
         guard url.queryItems?[AppConstants.QueryItems.openMoreInfoDialog.rawValue] == nil || server.info
             .version >= .canNavigateMoreInfoDialogThroughFrontend else {
@@ -52,6 +53,8 @@ extension WebViewController {
             }
             return url.path
         }()
+
+        Current.Log.info("Requesting frontend panel navigation path: \(urlPathIncludingQueryParams)")
 
         navigate(path: urlPathIncludingQueryParams) { [weak self] success in
             if !success {
