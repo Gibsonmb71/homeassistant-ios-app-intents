@@ -71,8 +71,6 @@ public extension HAEntity {
                 image = .lightbulbIcon
             case .lock:
                 image = getLockIcon()
-            case .mediaPlayer:
-                image = .playCircleOutlineIcon
             case .scene:
                 image = .paletteOutlineIcon
             case .script:
@@ -97,8 +95,6 @@ public extension HAEntity {
                 image = .checkboxMarkedOutlineIcon
             case .climate:
                 image = .homeThermometerOutlineIcon
-            case .vacuum:
-                image = .robotVacuumIcon
             }
         }
 
