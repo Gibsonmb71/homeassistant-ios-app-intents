@@ -2,7 +2,7 @@ import Foundation
 import HAKit
 import UIKit
 
-public enum Domain: String, CaseIterable {
+public enum Domain: String, CaseIterable, Sendable {
     case automation
     case button
     case climate
@@ -12,6 +12,7 @@ public enum Domain: String, CaseIterable {
     case inputButton = "input_button"
     case light
     case lock
+    case mediaPlayer = "media_player"
     case scene
     case script
     case `switch`
@@ -21,6 +22,7 @@ public enum Domain: String, CaseIterable {
     case person
     case camera
     case todo
+    case vacuum
     // TODO: Map more domains
 
     public init?(entityId: String) {
@@ -213,6 +215,8 @@ public enum Domain: String, CaseIterable {
             image = .lightbulbIcon
         case .lock:
             image = .lockIcon
+        case .mediaPlayer:
+            image = .playCircleOutlineIcon
         case .scene:
             image = .paletteOutlineIcon
         case .script:
@@ -231,6 +235,8 @@ public enum Domain: String, CaseIterable {
             image = .cameraIcon
         case .todo:
             image = .checkboxMarkedOutlineIcon
+        case .vacuum:
+            image = .robotVacuumIcon
         }
         return image
     }
@@ -339,7 +345,7 @@ public extension Domain {
             return .toggle
         case .lock:
             return nil // Lock requires state-aware action (lock/unlock)
-        case .sensor, .binarySensor, .zone, .person, .camera, .todo, .climate:
+        case .sensor, .binarySensor, .zone, .person, .camera, .todo, .climate, .mediaPlayer, .vacuum:
             return nil // Read-only or complex domains
         }
     }
