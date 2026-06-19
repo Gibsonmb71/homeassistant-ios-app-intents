@@ -4,6 +4,9 @@ import Foundation
 import SFSafeSymbols
 import Shared
 import UniformTypeIdentifiers
+#if canImport(UIKit)
+import UIKit
+#endif
 
 @available(iOS 18.0, *)
 enum HAIntentLightEntityVisibility: Sendable {
@@ -109,11 +112,14 @@ struct HAIndexedLightEntity: IndexedEntity, URLRepresentableEntity, Sendable {
         attributes.alternateNames = alternateNames
         attributes.keywords = keywords
         attributes.contentDescription = contentDescription
+        attributes.identifier = serverName
         attributes.contentURL = AppConstants.openEntityDeeplinkURL(entityId: entityId, serverId: serverId)
         attributes.domainIdentifier = "home-assistant.lights.\(serverId)"
         attributes.containerIdentifier = serverId
-        attributes.containerTitle = areaName ?? serverName
-        attributes.relatedUniqueIdentifier = id
+        attributes.containerTitle = serverName
+        attributes.containerDisplayName = serverName
+        attributes.relatedUniqueIdentifier = serverId
+        attributes.thumbnailData = Self.lightbulbThumbnailData
         attributes.userOwned = NSNumber(value: true)
         attributes.userCurated = NSNumber(value: true)
         attributes.rankingHint = NSNumber(value: 80)
@@ -193,6 +199,29 @@ struct HAIndexedLightEntity: IndexedEntity, URLRepresentableEntity, Sendable {
             deviceName,
             iconName,
         ].compactMap { $0?.nilIfEmpty } + displaySynonyms
+    }
+
+    private static var lightbulbThumbnailData: Data? {
+        #if canImport(UIKit)
+        let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 42, weight: .regular)
+        guard let symbol = UIImage(
+            systemName: SFSymbol.lightbulbFill.rawValue,
+            withConfiguration: symbolConfiguration
+        )?.withTintColor(.systemYellow, renderingMode: .alwaysOriginal) else {
+            return nil
+        }
+
+        let imageSize = CGSize(width: 64, height: 64)
+        return UIGraphicsImageRenderer(size: imageSize).pngData { _ in
+            let origin = CGPoint(
+                x: (imageSize.width - symbol.size.width) / 2,
+                y: (imageSize.height - symbol.size.height) / 2
+            )
+            symbol.draw(at: origin)
+        }
+        #else
+        return nil
+        #endif
     }
 }
 
