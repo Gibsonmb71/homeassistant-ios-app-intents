@@ -1,6 +1,7 @@
 import AppIntents
 import CoreSpotlight
 import Foundation
+import GRDB
 import SFSafeSymbols
 import Shared
 import UniformTypeIdentifiers
@@ -598,6 +599,116 @@ struct HAIndexedHomeAssistantEntity: IndexedEntity, URLRepresentableEntity, Send
 }
 
 @available(iOS 18.0, *)
+private struct HAIndexedEntityDatabaseSnapshot {
+    let entitiesPerServer: [(Server, [HAAppEntity])]
+    let registryMaps: [String: [String: EntityRegistryListForDisplay.Entity]]
+    let deviceMaps: [String: [String: AppDeviceRegistry]]
+    let areaMaps: [String: [String: AppArea]]
+
+    static func load(domains: [Domain]) -> HAIndexedEntityDatabaseSnapshot {
+        var entitiesPerServer: [(Server, [HAAppEntity])] = []
+        var registryMaps: [String: [String: EntityRegistryListForDisplay.Entity]] = [:]
+        var deviceMaps: [String: [String: AppDeviceRegistry]] = [:]
+        var areaMaps: [String: [String: AppArea]] = [:]
+        let domainValues = domains.map(\.rawValue)
+
+        for server in Current.servers.all.sorted(by: { $0.info.name < $1.info.name }) {
+            let serverId = server.identifier.rawValue
+
+            do {
+                let snapshot = try Current.database().read { db in
+                    let entities = try fetchEntities(
+                        db: db,
+                        serverId: serverId,
+                        domainValues: domainValues
+                    )
+                    let registryMap = try fetchRegistryMap(db: db, serverId: serverId)
+                    let devices = try AppDeviceRegistry
+                        .filter(Column(DatabaseTables.DeviceRegistry.serverId.rawValue) == serverId)
+                        .fetchAll(db)
+                    let areas = try AppArea
+                        .filter(Column(DatabaseTables.AppArea.serverId.rawValue) == serverId)
+                        .fetchAll(db)
+
+                    return (
+                        entities: entities,
+                        registryMap: registryMap,
+                        deviceMap: buildDeviceMap(registryMap: registryMap, devices: devices),
+                        areaMap: buildAreaMap(areas: areas)
+                    )
+                }
+
+                entitiesPerServer.append((server, snapshot.entities))
+                registryMaps[serverId] = snapshot.registryMap
+                deviceMaps[serverId] = snapshot.deviceMap
+                areaMaps[serverId] = snapshot.areaMap
+            } catch {
+                Current.Log.error("Failed to load entity database snapshot for Spotlight indexing: \(error)")
+            }
+        }
+
+        return HAIndexedEntityDatabaseSnapshot(
+            entitiesPerServer: entitiesPerServer,
+            registryMaps: registryMaps,
+            deviceMaps: deviceMaps,
+            areaMaps: areaMaps
+        )
+    }
+
+    private static func fetchEntities(
+        db: Database,
+        serverId: String,
+        domainValues: [String]
+    ) throws -> [HAAppEntity] {
+        let serverFilter = Column(DatabaseTables.AppEntity.serverId.rawValue) == serverId
+        guard domainValues.isEmpty == false else {
+            return try HAAppEntity
+                .filter(serverFilter)
+                .fetchAll(db)
+        }
+
+        return try HAAppEntity
+            .filter(serverFilter)
+            .filter(domainValues.contains(Column(DatabaseTables.AppEntity.domain.rawValue)))
+            .fetchAll(db)
+    }
+
+    private static func fetchRegistryMap(
+        db: Database,
+        serverId: String
+    ) throws -> [String: EntityRegistryListForDisplay.Entity] {
+        try EntityRegistryListForDisplay.Entity
+            .filter(Column(DatabaseTables.DisplayEntityRegistry.serverId.rawValue) == serverId)
+            .fetchAll(db)
+            .reduce(into: [:]) { result, entity in
+                result[entity.entityId] = entity
+            }
+    }
+
+    private static func buildDeviceMap(
+        registryMap: [String: EntityRegistryListForDisplay.Entity],
+        devices: [AppDeviceRegistry]
+    ) -> [String: AppDeviceRegistry] {
+        let devicesByDeviceId = Dictionary(uniqueKeysWithValues: devices.map { ($0.deviceId, $0) })
+        return registryMap.reduce(into: [:]) { result, entry in
+            guard let deviceId = entry.value.deviceId,
+                  let device = devicesByDeviceId[deviceId] else {
+                return
+            }
+            result[entry.key] = device
+        }
+    }
+
+    private static func buildAreaMap(areas: [AppArea]) -> [String: AppArea] {
+        areas.reduce(into: [:]) { result, area in
+            for entityId in area.entities {
+                result[entityId] = area
+            }
+        }
+    }
+}
+
+@available(iOS 18.0, *)
 struct HAIndexedLightEntityQuery: EntityQuery, EntityStringQuery {
     func entities(for identifiers: [String]) async throws -> [HAIndexedLightEntity] {
         let identifierSet = Set(identifiers)
@@ -615,17 +726,20 @@ struct HAIndexedLightEntityQuery: EntityQuery, EntityStringQuery {
     }
 
     func primaryLights(matching string: String? = nil) -> [(Server, [HAIndexedLightEntity])] {
-        ControlEntityProvider(domains: [.light])
-            .getEntities()
-            .compactMap { result -> (Server, [HAIndexedLightEntity])? in
-                let (server, entities) = result
-                let lights = primaryLights(
-                    for: server,
-                    entities: entities,
-                    matching: string
-                )
-                return lights.isEmpty ? nil : (server, lights)
-            }
+        let snapshot = HAIndexedEntityDatabaseSnapshot.load(domains: [.light])
+        return snapshot.entitiesPerServer.compactMap { result -> (Server, [HAIndexedLightEntity])? in
+            let (server, entities) = result
+            let serverId = server.identifier.rawValue
+            let lights = primaryLights(
+                for: server,
+                entities: entities,
+                deviceMap: snapshot.deviceMaps[serverId] ?? [:],
+                areaMap: snapshot.areaMaps[serverId] ?? [:],
+                registryMap: snapshot.registryMaps[serverId] ?? [:],
+                matching: string
+            )
+            return lights.isEmpty ? nil : (server, lights)
+        }
     }
 
     private func collection(matching string: String? = nil) -> IntentItemCollection<HAIndexedLightEntity> {
@@ -641,13 +755,11 @@ struct HAIndexedLightEntityQuery: EntityQuery, EntityStringQuery {
     private func primaryLights(
         for server: Server,
         entities: [HAAppEntity],
+        deviceMap: [String: AppDeviceRegistry],
+        areaMap: [String: AppArea],
+        registryMap: [String: EntityRegistryListForDisplay.Entity],
         matching string: String?
     ) -> [HAIndexedLightEntity] {
-        let serverId = server.identifier.rawValue
-        let deviceMap = entities.devicesMap(for: serverId)
-        let areaMap = entities.areasMap(for: serverId)
-        let registryMap = registryMap(serverId: serverId)
-
         return entities.compactMap { entity in
             let registry = registryMap[entity.entityId]
             let visibility = HAIntentLightEntityVisibility.visibility(for: entity, registry: registry)
@@ -666,19 +778,6 @@ struct HAIndexedLightEntityQuery: EntityQuery, EntityStringQuery {
 
             guard let string else { return indexedEntity }
             return indexedEntity.matches(string) ? indexedEntity : nil
-        }
-    }
-
-    private func registryMap(serverId: String) -> [String: EntityRegistryListForDisplay.Entity] {
-        do {
-            return try EntityRegistryListForDisplay.Entity
-                .config(serverId: serverId)
-                .reduce(into: [:]) { result, entity in
-                    result[entity.entityId] = entity
-                }
-        } catch {
-            Current.Log.error("Failed to fetch light entity registry for Spotlight indexing: \(error)")
-            return [:]
         }
     }
 }
@@ -701,17 +800,20 @@ struct HAIndexedHomeAssistantEntityQuery: EntityQuery, EntityStringQuery {
     }
 
     func primaryEntities(matching string: String? = nil) -> [(Server, [HAIndexedHomeAssistantEntity])] {
-        ControlEntityProvider(domains: HAIndexedEntityDomain.indexedDomains)
-            .getEntities()
-            .compactMap { result -> (Server, [HAIndexedHomeAssistantEntity])? in
-                let (server, entities) = result
-                let indexedEntities = primaryEntities(
-                    for: server,
-                    entities: entities,
-                    matching: string
-                )
-                return indexedEntities.isEmpty ? nil : (server, indexedEntities)
-            }
+        let snapshot = HAIndexedEntityDatabaseSnapshot.load(domains: HAIndexedEntityDomain.indexedDomains)
+        return snapshot.entitiesPerServer.compactMap { result -> (Server, [HAIndexedHomeAssistantEntity])? in
+            let (server, entities) = result
+            let serverId = server.identifier.rawValue
+            let indexedEntities = primaryEntities(
+                for: server,
+                entities: entities,
+                deviceMap: snapshot.deviceMaps[serverId] ?? [:],
+                areaMap: snapshot.areaMaps[serverId] ?? [:],
+                registryMap: snapshot.registryMaps[serverId] ?? [:],
+                matching: string
+            )
+            return indexedEntities.isEmpty ? nil : (server, indexedEntities)
+        }
     }
 
     private func collection(
@@ -729,13 +831,11 @@ struct HAIndexedHomeAssistantEntityQuery: EntityQuery, EntityStringQuery {
     private func primaryEntities(
         for server: Server,
         entities: [HAAppEntity],
+        deviceMap: [String: AppDeviceRegistry],
+        areaMap: [String: AppArea],
+        registryMap: [String: EntityRegistryListForDisplay.Entity],
         matching string: String?
     ) -> [HAIndexedHomeAssistantEntity] {
-        let serverId = server.identifier.rawValue
-        let deviceMap = entities.devicesMap(for: serverId)
-        let areaMap = entities.areasMap(for: serverId)
-        let registryMap = registryMap(serverId: serverId)
-
         return entities.compactMap { entity in
             let registry = registryMap[entity.entityId]
             let visibility = HAIndexedHomeAssistantEntityVisibility.visibility(for: entity, registry: registry)
@@ -756,19 +856,6 @@ struct HAIndexedHomeAssistantEntityQuery: EntityQuery, EntityStringQuery {
 
             guard let string else { return indexedEntity }
             return indexedEntity.matches(string) ? indexedEntity : nil
-        }
-    }
-
-    private func registryMap(serverId: String) -> [String: EntityRegistryListForDisplay.Entity] {
-        do {
-            return try EntityRegistryListForDisplay.Entity
-                .config(serverId: serverId)
-                .reduce(into: [:]) { result, entity in
-                    result[entity.entityId] = entity
-                }
-        } catch {
-            Current.Log.error("Failed to fetch entity registry for Spotlight indexing: \(error)")
-            return [:]
         }
     }
 }
@@ -943,12 +1030,11 @@ struct HAIndexedHomeAssistantEntitySpotlightIndexer {
 enum HAIndexedEntityIndexingCoordinator {
     static func indexAvailableEntities(reason: String) async {
         do {
-            async let lightSummary = HAIndexedLightEntitySpotlightIndexer().indexPrimaryLights()
-            async let entitySummary = HAIndexedHomeAssistantEntitySpotlightIndexer().indexPrimaryEntities()
-            let summaries = try await (lightSummary, entitySummary)
+            let lightSummary = try await HAIndexedLightEntitySpotlightIndexer().indexPrimaryLights()
+            let entitySummary = try await HAIndexedHomeAssistantEntitySpotlightIndexer().indexPrimaryEntities()
             Current.Log.info(
-                "Indexed \(summaries.0.indexedCount) Home Assistant lights and "
-                    + "\(summaries.1.indexedCount) other entities for Spotlight (\(reason))"
+                "Indexed \(lightSummary.indexedCount) Home Assistant lights and "
+                    + "\(entitySummary.indexedCount) other entities for Spotlight (\(reason))"
             )
         } catch {
             Current.Log.error(
@@ -959,12 +1045,11 @@ enum HAIndexedEntityIndexingCoordinator {
 
     static func reindexAfterAppEntityCacheUpdate(serverId: String, serverName: String?) async {
         do {
-            async let lightSummary = HAIndexedLightEntitySpotlightIndexer().reindexPrimaryLights()
-            async let entitySummary = HAIndexedHomeAssistantEntitySpotlightIndexer().reindexPrimaryEntities()
-            let summaries = try await (lightSummary, entitySummary)
+            let lightSummary = try await HAIndexedLightEntitySpotlightIndexer().reindexPrimaryLights()
+            let entitySummary = try await HAIndexedHomeAssistantEntitySpotlightIndexer().reindexPrimaryEntities()
             Current.Log.info(
-                "Indexed \(summaries.0.indexedCount) Home Assistant lights and "
-                    + "\(summaries.1.indexedCount) other entities for Spotlight after app entity cache update"
+                "Indexed \(lightSummary.indexedCount) Home Assistant lights and "
+                    + "\(entitySummary.indexedCount) other entities for Spotlight after app entity cache update"
                     + serverLogSuffix(serverId: serverId, serverName: serverName)
             )
         } catch {
