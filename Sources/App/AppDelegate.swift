@@ -179,7 +179,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 return
             }
             let serverName = notification.userInfo?[Notification.AppEntityCacheUpdateUserInfo.serverName] as? String
-            Task.detached(priority: .background) {
+            Task(priority: .background) {
                 await HAIndexedLightEntityIndexingCoordinator.reindexAfterAppEntityCacheUpdate(
                     serverId: serverId,
                     serverName: serverName
@@ -206,7 +206,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard hasRequestedInitialLightEntitySpotlightIndexing == false else { return }
         hasRequestedInitialLightEntitySpotlightIndexing = true
 
-        Task.detached(priority: .background) {
+        Task(priority: .background) {
             await HAIndexedLightEntityIndexingCoordinator.indexAvailableLights(reason: "app became active")
 
             // Give the foreground app entity refresh a chance to settle if launch indexing races local cache warmup.
