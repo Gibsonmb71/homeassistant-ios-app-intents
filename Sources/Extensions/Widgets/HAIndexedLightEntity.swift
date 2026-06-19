@@ -711,30 +711,18 @@ private struct HAIndexedEntityDatabaseSnapshot {
 @available(iOS 18.0, *)
 struct HAIndexedLightEntityQuery: EntityQuery, EntityStringQuery {
     func entities(for identifiers: [String]) async throws -> [HAIndexedLightEntity] {
-        await MainActor.run {
-            let identifierSet = Set(identifiers)
-            return primaryLights()
-                .flatMap(\.1)
-                .filter { identifierSet.contains($0.id) }
-        }
+        let identifierSet = Set(identifiers)
+        return primaryLights()
+            .flatMap(\.1)
+            .filter { identifierSet.contains($0.id) }
     }
 
     func entities(matching string: String) async throws -> IntentItemCollection<HAIndexedLightEntity> {
-        let sections = await MainActor.run {
-            primaryLights(matching: string).map { server, lights in
-                (server.info.name, lights)
-            }
-        }
-        return collection(sections: sections)
+        collection(matching: string)
     }
 
     func suggestedEntities() async throws -> IntentItemCollection<HAIndexedLightEntity> {
-        let sections = await MainActor.run {
-            primaryLights().map { server, lights in
-                (server.info.name, lights)
-            }
-        }
-        return collection(sections: sections)
+        collection()
     }
 
     func primaryLights(matching string: String? = nil) -> [(Server, [HAIndexedLightEntity])] {
@@ -755,18 +743,10 @@ struct HAIndexedLightEntityQuery: EntityQuery, EntityStringQuery {
     }
 
     private func collection(matching string: String? = nil) -> IntentItemCollection<HAIndexedLightEntity> {
-        collection(sections: primaryLights(matching: string).map { server, lights in
-            (server.info.name, lights)
-        })
-    }
-
-    private func collection(
-        sections: [(String, [HAIndexedLightEntity])]
-    ) -> IntentItemCollection<HAIndexedLightEntity> {
-        .init(sections: sections.map { section in
-            let (serverName, lights) = section
+        .init(sections: primaryLights(matching: string).map { result in
+            let (server, lights) = result
             return IntentItemSection<HAIndexedLightEntity>(
-                .init(stringLiteral: serverName),
+                .init(stringLiteral: server.info.name),
                 items: lights
             )
         })
@@ -805,30 +785,18 @@ struct HAIndexedLightEntityQuery: EntityQuery, EntityStringQuery {
 @available(iOS 18.0, *)
 struct HAIndexedHomeAssistantEntityQuery: EntityQuery, EntityStringQuery {
     func entities(for identifiers: [String]) async throws -> [HAIndexedHomeAssistantEntity] {
-        await MainActor.run {
-            let identifierSet = Set(identifiers)
-            return primaryEntities()
-                .flatMap(\.1)
-                .filter { identifierSet.contains($0.id) }
-        }
+        let identifierSet = Set(identifiers)
+        return primaryEntities()
+            .flatMap(\.1)
+            .filter { identifierSet.contains($0.id) }
     }
 
     func entities(matching string: String) async throws -> IntentItemCollection<HAIndexedHomeAssistantEntity> {
-        let sections = await MainActor.run {
-            primaryEntities(matching: string).map { server, entities in
-                (server.info.name, entities)
-            }
-        }
-        return collection(sections: sections)
+        collection(matching: string)
     }
 
     func suggestedEntities() async throws -> IntentItemCollection<HAIndexedHomeAssistantEntity> {
-        let sections = await MainActor.run {
-            primaryEntities().map { server, entities in
-                (server.info.name, entities)
-            }
-        }
-        return collection(sections: sections)
+        collection()
     }
 
     func primaryEntities(matching string: String? = nil) -> [(Server, [HAIndexedHomeAssistantEntity])] {
@@ -851,18 +819,10 @@ struct HAIndexedHomeAssistantEntityQuery: EntityQuery, EntityStringQuery {
     private func collection(
         matching string: String? = nil
     ) -> IntentItemCollection<HAIndexedHomeAssistantEntity> {
-        collection(sections: primaryEntities(matching: string).map { server, entities in
-            (server.info.name, entities)
-        })
-    }
-
-    private func collection(
-        sections: [(String, [HAIndexedHomeAssistantEntity])]
-    ) -> IntentItemCollection<HAIndexedHomeAssistantEntity> {
-        .init(sections: sections.map { section in
-            let (serverName, entities) = section
+        .init(sections: primaryEntities(matching: string).map { result in
+            let (server, entities) = result
             return IntentItemSection<HAIndexedHomeAssistantEntity>(
-                .init(stringLiteral: serverName),
+                .init(stringLiteral: server.info.name),
                 items: entities
             )
         })
@@ -990,9 +950,7 @@ struct HAIndexedLightEntitySpotlightIndexer {
     }
 
     func indexPrimaryLights(in index: CSSearchableIndex) async throws -> Summary {
-        let lights = await MainActor.run {
-            query.primaryLights().flatMap(\.1)
-        }
+        let lights = query.primaryLights().flatMap(\.1)
         guard lights.isEmpty == false else {
             return Summary(indexedCount: 0)
         }
@@ -1041,9 +999,7 @@ struct HAIndexedHomeAssistantEntitySpotlightIndexer {
     }
 
     func indexPrimaryEntities(in index: CSSearchableIndex) async throws -> Summary {
-        let entities = await MainActor.run {
-            query.primaryEntities().flatMap(\.1)
-        }
+        let entities = query.primaryEntities().flatMap(\.1)
         guard entities.isEmpty == false else {
             return Summary(indexedCount: 0)
         }
