@@ -119,7 +119,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setupModels()
         setupLocalization()
         setupMenus()
-        setupLightEntitySpotlightIndexing()
 
         let launchingForLocation = launchOptions?[.location] != nil
         let event = ClientEvent(
