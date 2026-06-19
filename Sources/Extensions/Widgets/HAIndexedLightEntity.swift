@@ -943,12 +943,11 @@ struct HAIndexedHomeAssistantEntitySpotlightIndexer {
 enum HAIndexedEntityIndexingCoordinator {
     static func indexAvailableEntities(reason: String) async {
         do {
-            async let lightSummary = HAIndexedLightEntitySpotlightIndexer().indexPrimaryLights()
-            async let entitySummary = HAIndexedHomeAssistantEntitySpotlightIndexer().indexPrimaryEntities()
-            let summaries = try await (lightSummary, entitySummary)
+            let lightSummary = try await HAIndexedLightEntitySpotlightIndexer().indexPrimaryLights()
+            let entitySummary = try await HAIndexedHomeAssistantEntitySpotlightIndexer().indexPrimaryEntities()
             Current.Log.info(
-                "Indexed \(summaries.0.indexedCount) Home Assistant lights and "
-                    + "\(summaries.1.indexedCount) other entities for Spotlight (\(reason))"
+                "Indexed \(lightSummary.indexedCount) Home Assistant lights and "
+                    + "\(entitySummary.indexedCount) other entities for Spotlight (\(reason))"
             )
         } catch {
             Current.Log.error(
@@ -959,12 +958,11 @@ enum HAIndexedEntityIndexingCoordinator {
 
     static func reindexAfterAppEntityCacheUpdate(serverId: String, serverName: String?) async {
         do {
-            async let lightSummary = HAIndexedLightEntitySpotlightIndexer().reindexPrimaryLights()
-            async let entitySummary = HAIndexedHomeAssistantEntitySpotlightIndexer().reindexPrimaryEntities()
-            let summaries = try await (lightSummary, entitySummary)
+            let lightSummary = try await HAIndexedLightEntitySpotlightIndexer().reindexPrimaryLights()
+            let entitySummary = try await HAIndexedHomeAssistantEntitySpotlightIndexer().reindexPrimaryEntities()
             Current.Log.info(
-                "Indexed \(summaries.0.indexedCount) Home Assistant lights and "
-                    + "\(summaries.1.indexedCount) other entities for Spotlight after app entity cache update"
+                "Indexed \(lightSummary.indexedCount) Home Assistant lights and "
+                    + "\(entitySummary.indexedCount) other entities for Spotlight after app entity cache update"
                     + serverLogSuffix(serverId: serverId, serverName: serverName)
             )
         } catch {
